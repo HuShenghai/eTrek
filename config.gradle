@@ -1,0 +1,74 @@
+/**
+ * 在主项目的根目录下创建config.gradle文件
+ * 在这里单独处理统一依赖问题
+ * 注意需要在根目录的build.gradle中进行引入:apply from: "config.gradle"
+ */
+ext {
+    android = [
+            compileSdkVersion: 26,
+            buildToolsVersion: "26.0.2",
+            minSdkVersion    : 21,
+            targetSdkVersion : 26
+    ]
+
+    supportLibrary = "26.+"
+    supportDependencies = [
+            /**
+             * Google 的support库
+             */
+            supportAppcompatV7: "com.android.support:appcompat-v7:${supportLibrary}",
+            supportV4       : "com.android.support:support-v4:${supportLibrary}",
+            design          : "com.android.support:design:${supportLibrary}",
+            constraintLayout: 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
+    ]
+
+    thirdParty = [
+            /**
+             * 使用时注意哪些需要配置混淆的：retrofit
+             */
+            junit            : 'junit:junit:4.12',
+            bugly            : 'com.tencent.bugly:crashreport:latest.release',       //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+            buglyNative      : 'com.tencent.bugly:nativecrashreport:latest.release', //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
+            logger           : 'com.orhanobut:logger:2.1.1',                         // 封装好的日志
+            timber           : 'com.jakewharton.timber:timber:4.5.1',                // 可以添加多个日志的日志管理工具
+            fastJson         : 'com.alibaba:fastjson:1.1.63.android',                // 阿里的json库
+            fileDownloader   : 'com.liulishuo.filedownloader:library:1.6.5',         // 方便的下载库
+            mpAndroidChart   : 'com.github.PhilJay:MPAndroidChart:v3.0.2',           // 牛叉的图表库，需要添加仓库：maven { url "https://jitpack.io" }
+            retrofit         : 'com.squareup.retrofit2:retrofit:2.3.0',              // square的http库
+            gsonConverter    : 'com.squareup.retrofit2:converter-gson:2.0.0-beta4',
+            scalarConverter  : 'com.squareup.retrofit2:converter-scalars:2.0.0-beta4',
+            rxJavaAdapter    : 'com.squareup.retrofit2:adapter-rxjava2:2.2.0',
+            rxJava           : 'io.reactivex.rxjava2:rxjava:2.1.3',
+            rxAndroid        : 'io.reactivex.rxjava2:rxandroid:2.0.1',               // 官方建议同时引入rxJava
+            okHttp           : 'com.squareup.okhttp3:okhttp:3.9.0',
+            eventBus         : 'org.greenrobot:eventbus:3.0.0',
+            photoView        : 'com.github.chrisbanes:PhotoView:2.0.0',              // 牛叉的PhotoView，需要添加maven { url "https://jitpack.io" }
+            roundImage       : 'com.makeramen:roundedimageview:2.3.0',               // 圆角ImageView，需要添加mavenCentral()
+            safewebviewbridge: 'cn.pedant.safewebviewbridge:library:1.4',            // Java与JavaScript的通信，需要添加mavenCentral()
+            jsBridge         : 'com.github.lzyzsd:jsbridge:1.0.4',                   // jsbridgeJava与JavaScript的通信，需要添加maven { url "https://jitpack.io" }
+            greenDao         : 'org.greenrobot:greendao:3.2.2'
+
+            /** greenDao 需要在根目录的build.gradle中加入如下
+             // In your root build.gradle file:
+             buildscript {
+                 repositories {
+                     jcenter()
+                     mavenCentral() // add repository
+                 }
+                dependencies {
+                     classpath 'com.android.tools.build:gradle:2.3.1'
+                     classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2' // add plugin
+                }
+             }
+
+             // In your app projects build.gradle file:
+             apply plugin: 'com.android.application'
+             apply plugin: 'org.greenrobot.greendao' // apply plugin
+
+             dependencies {
+             compile 'org.greenrobot:greendao:3.2.2' // add library
+             }
+             */
+
+    ]
+}

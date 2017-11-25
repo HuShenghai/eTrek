@@ -1,0 +1,93 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'org.greenrobot.greendao'
+
+def config = rootProject.ext.android
+def supportLibrary = rootProject.ext.supportDependencies
+def thirdParty = rootProject.ext.thirdParty
+
+android {
+
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
+
+    signingConfigs {
+        key_release {
+            keyAlias 'bottle'
+            keyPassword 'bottle0618'
+            storePassword 'bottle0618'
+            storeFile rootProject.file('bottle.keystore.jks')
+        }
+
+        key_debug {
+            keyAlias 'bottle'
+            keyPassword 'bottle0618'
+            storePassword 'bottle0618'
+            storeFile rootProject.file('debug.keystore.jks')
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.bottle.trek"
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode 1
+        versionName "0.0.1.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        ndk {
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.key_release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            signingConfig signingConfigs.key_debug
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError true
+    }
+}
+
+dependencies {
+    compile project(':util')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile thirdParty.junit
+    compile supportLibrary.supportAppcompatV7
+    compile supportLibrary.design
+    compile supportLibrary.supportV4
+    compile supportLibrary.constraintLayout
+    compile thirdParty.bugly
+    compile thirdParty.buglyNative
+    compile thirdParty.logger
+    compile thirdParty.timber
+    compile thirdParty.fastJson
+    compile thirdParty.rxAndroid
+    compile thirdParty.rxJava
+    compile thirdParty.rxJavaAdapter
+    compile thirdParty.retrofit
+    compile thirdParty.okHttp
+    compile thirdParty.gsonConverter
+    compile thirdParty.greenDao
+    compile thirdParty.eventBus
+
+    compile 'com.amap.api:3dmap:latest.integration'
+    compile 'com.amap.api:location:latest.integration'
+    compile 'com.amap.api:search:latest.integration'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+}
