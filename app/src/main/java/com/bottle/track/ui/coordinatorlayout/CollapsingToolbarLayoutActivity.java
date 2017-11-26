@@ -39,7 +39,7 @@ public class CollapsingToolbarLayoutActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        tabLayout= (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout= findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
         tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
         tabLayout.addTab(tabLayout.newTab().setText("Tab 3"));

@@ -71,6 +71,7 @@ dependencies {
     compile supportLibrary.design
     compile supportLibrary.supportV4
     compile supportLibrary.constraintLayout
+    compile supportLibrary.cardView
     compile thirdParty.bugly
     compile thirdParty.buglyNative
     compile thirdParty.logger

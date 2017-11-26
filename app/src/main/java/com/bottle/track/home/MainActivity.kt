@@ -51,7 +51,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
     private fun init() {
         homeFragment = HomeFragment.newInstance("", "1")
-        msgFragment = MsgFragment.newInstance("3", "3")
+        msgFragment = CollectionFragment.newInstance("3", "3")
         dashFragment = MapFragment.newInstance("2", "2")
         supportFragmentManager.beginTransaction()
                 .add(R.id.fLayoutContainer, homeFragment, "home")
@@ -65,9 +65,11 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
     }
     private fun permission(){
-        if(hasPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)){
-            return
+        if(!hasPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+            requestPermission(this, Manifest.permission.ACCESS_FINE_LOCATION,100)
         }
-        requestPermission(this, Manifest.permission.ACCESS_FINE_LOCATION,100)
+        if(!hasPermission(this, Manifest.permission.READ_PHONE_STATE)){
+            requestPermission(this, Manifest.permission.READ_PHONE_STATE, 101)
+        }
     }
 }

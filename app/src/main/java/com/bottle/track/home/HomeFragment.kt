@@ -1,5 +1,6 @@
 package com.bottle.track.home
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -8,17 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.amap.api.maps.AMap
-import com.amap.api.maps.MapView
+import com.bottle.track.BaseFragment
 import com.bottle.track.R
 import com.bottle.track.api.Api
+import com.bottle.track.ui.coordinatorlayout.CollapsingToolbarLayoutActivity
 import com.bottle.util.toJsonString
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(), View.OnClickListener {
+class HomeFragment : BaseFragment(), View.OnClickListener {
 
-    private val TAG: String? = "HomeFragment"
     private var mParam1: String? = null
     private var mParam2: String? = null
 
@@ -45,15 +46,22 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        btnSettings.setOnClickListener(this)
+
+    }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view: View = inflater!!.inflate(R.layout.fragment_home, container, false)
-        return view
+        return inflater!!.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
-
+            R.id.btnSettings ->{
+                CollapsingToolbarLayoutActivity.start(context as Activity)
+            }
         }
     }
 
@@ -63,6 +71,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     override fun onDetach() {
         super.onDetach()
+    }
+
+    override fun fetchData() {
+
     }
 
     private fun apiTest(){
