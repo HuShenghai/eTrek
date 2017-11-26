@@ -10,11 +10,16 @@ import com.bottle.track.R
 import org.greenrobot.eventbus.EventBus
 import android.widget.Toast
 import com.amap.api.location.AMapLocation
+import com.autonavi.amap.mapcore.IPoint
 import com.bottle.track.BaseFragment
 import com.bottle.track.TrackEvent
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.CameraUpdateFactory
+
+
 
 class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickListener, SearchView.OnQueryTextListener {
 
@@ -76,6 +81,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         mapView = view.findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
         amap = mapView?.map
+        amap?.isMyLocationEnabled = true
         return view
     }
 
@@ -104,7 +110,8 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
     fun onReceiveLocation(event: TrackEvent<Any>) {
         if(event.event is AMapLocation) {
             val location: AMapLocation = event.event as AMapLocation
-            Toast.makeText(context, event.info, Toast.LENGTH_LONG).show()
+            amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    LatLng(location.latitude, location.longitude), 14f))
         }
     }
 }
