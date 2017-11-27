@@ -8,9 +8,7 @@ import com.amap.api.maps.MapView
 
 import com.bottle.track.R
 import org.greenrobot.eventbus.EventBus
-import android.widget.Toast
 import com.amap.api.location.AMapLocation
-import com.autonavi.amap.mapcore.IPoint
 import com.bottle.track.BaseFragment
 import com.bottle.track.TrackEvent
 import kotlinx.android.synthetic.main.fragment_map.*
@@ -18,7 +16,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.CameraUpdateFactory
-
+import com.bottle.track.lbs.MyOverlay
 
 
 class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickListener, SearchView.OnQueryTextListener {
@@ -81,7 +79,9 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         mapView = view.findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
         amap = mapView?.map
+        amap?.isTrafficEnabled = true
         amap?.isMyLocationEnabled = true
+        overlay = MyOverlay(amap!!)
         return view
     }
 
@@ -106,12 +106,25 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         return false
     }
 
+    private var isFirstLocation: Boolean = true // 第一次定位
+    private var isFollow: Boolean = false       // 地图显示位置是否跟随定位，默认false
+    private var overlay: MyOverlay? = null
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onReceiveLocation(event: TrackEvent<Any>) {
-        if(event.event is AMapLocation) {
+        if (event.event is AMapLocation) {
             val location: AMapLocation = event.event as AMapLocation
-            amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                    LatLng(location.latitude, location.longitude), 14f))
+            val position = LatLng(location.latitude, location.longitude)
+            overlay?.latLngs?.add(position)
+            if(overlay?.latLngs!!.size > 1){
+                overlay?.updateOverlay()
+            }
+            if (isFirstLocation) {
+                isFirstLocation = false// 只在第一次定位时显示到定位中心
+                amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 19f))
+            } else if(isFollow){
+                amap?.moveCamera(CameraUpdateFactory.changeLatLng(position))
+            }
         }
     }
 }

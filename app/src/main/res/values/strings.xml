@@ -1,7 +1,7 @@
 <resources>
     <!-- 第三方平台的 APP key -->
     <string name="amap_app_key" translatable="false">b1eeb247ea8e7c173205e336a6159e32</string>
-    <string name="bugly_app_key" translatable="false">cef89500f3</string>
+    <string name="bugly_app_key" translatable="false">881d02ffce</string>
 
     <string name="app_name">eTrek</string>
     <string name="title_home">我的</string>
