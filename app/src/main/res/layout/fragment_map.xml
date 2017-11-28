@@ -22,4 +22,46 @@
             android:layout_gravity="center"
             app:queryHint="@string/search"/>
     </android.support.v7.widget.CardView>
+
+    <ImageView
+        android:id="@+id/imgMyLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_marginLeft="@dimen/app_padding_left"
+        android:layout_marginBottom="@dimen/app_padding_left"
+        android:contentDescription="定位"
+        android:background="@drawable/bg_circle"
+        android:src="@mipmap/ic_launcher"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:orientation="vertical"
+        android:layout_gravity="top|right"
+        android:gravity="center"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="@dimen/app_padding_right"
+        android:background="#55000000">
+
+        <ImageView
+            android:id="@+id/imgLayers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:layout_marginBottom="@dimen/app_padding_left"
+            android:contentDescription="图层"
+            android:background="@drawable/bg_circle"
+            android:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/imgTrack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:contentDescription="轨迹"
+            android:background="@drawable/bg_circle"
+            android:src="@mipmap/ic_launcher"/>
+    </LinearLayout>
 </FrameLayout>

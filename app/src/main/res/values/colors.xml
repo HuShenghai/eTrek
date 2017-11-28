@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3d3b3b</color>
     <color name="colorPrimaryDark">#292727</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="bg_normal">#ffffff</color>
+    <color name="bg_press">#55000000</color>
 </resources>

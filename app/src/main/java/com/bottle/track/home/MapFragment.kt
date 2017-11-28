@@ -56,6 +56,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         searchView.setOnCloseListener(this)
         searchView.setOnSearchClickListener(this)
         searchView.setOnQueryTextListener(this)
+        imgMyLocation.setOnClickListener(this)
     }
 
     override fun onResume() {
@@ -81,6 +82,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         amap = mapView?.map
         amap?.isTrafficEnabled = true
         amap?.isMyLocationEnabled = true
+        // amap?.uiSettings?.isZoomControlsEnabled = false
         overlay = MyOverlay(amap!!)
         return view
     }
