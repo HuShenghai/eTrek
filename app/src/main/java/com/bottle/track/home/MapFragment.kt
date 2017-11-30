@@ -57,6 +57,8 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         searchView.setOnSearchClickListener(this)
         searchView.setOnQueryTextListener(this)
         imgMyLocation.setOnClickListener(this)
+        imgLayers.setOnClickListener(this)
+        imgTrack.setOnClickListener(this)
     }
 
     override fun onResume() {

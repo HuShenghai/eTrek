@@ -30,38 +30,44 @@
         android:layout_gravity="bottom|left"
         android:layout_marginLeft="@dimen/app_padding_left"
         android:layout_marginBottom="@dimen/app_padding_left"
+        android:padding="8dp"
         android:contentDescription="定位"
         android:background="@drawable/bg_circle"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@mipmap/ic_my_location_black_24dp"/>
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:orientation="vertical"
         android:layout_gravity="top|right"
+        android:padding="4dp"
         android:gravity="center"
         android:layout_marginTop="100dp"
-        android:layout_marginRight="@dimen/app_padding_right"
-        android:background="#55000000">
-
-        <ImageView
-            android:id="@+id/imgLayers"
-            android:layout_width="wrap_content"
+        android:layout_marginRight="@dimen/app_padding_right">
+        <LinearLayout
+            android:layout_width="36dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|left"
-            android:layout_marginBottom="@dimen/app_padding_left"
-            android:contentDescription="图层"
-            android:background="@drawable/bg_circle"
-            android:src="@mipmap/ic_launcher"/>
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imgTrack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|left"
-            android:contentDescription="轨迹"
-            android:background="@drawable/bg_circle"
-            android:src="@mipmap/ic_launcher"/>
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/imgLayers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/app_padding_left"
+                android:contentDescription="图层"
+                android:background="@drawable/bg_rect"
+                android:src="@mipmap/ic_layers_black_24dp"/>
+
+            <ImageView
+                android:id="@+id/imgTrack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="轨迹"
+                android:background="@drawable/bg_rect"
+                android:src="@mipmap/ic_directions_run_black_24dp"/>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
 </FrameLayout>
