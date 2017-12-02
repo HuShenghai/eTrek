@@ -9,7 +9,7 @@ import android.view.MenuItem
 import com.bottle.track.BaseActivity
 import com.bottle.track.MyApplication
 import com.bottle.track.R
-import com.bottle.track.TrackService
+import com.bottle.track.TrekService
 import com.bottle.util.hasPermission
 import com.bottle.util.requestPermission
 import kotlinx.android.synthetic.main.activity_main.*
@@ -60,7 +60,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                 .show(dashFragment)
                 .commit()
         navigation.selectedItemId = R.id.navigation_dashboard
-        val locationIntent = Intent(MyApplication.app, TrackService::class.java)
+        val locationIntent = Intent(MyApplication.app, TrekService::class.java)
         fLayoutContainer.postDelayed({ startService(locationIntent) }, 2000)
 
     }

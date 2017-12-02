@@ -13,8 +13,8 @@ class Api {
 
     init {
         baseUrl=  when (BuildConfig.DEBUG) {
-            true -> " http://fmeetu.com"
-            false -> " http://fmeetu.com" // http://fmeetu.com/api/api.php
+            true -> "http://z-smile.com"
+            false -> "http://z-smile.com"
         }
     }
 
@@ -37,7 +37,7 @@ class Api {
         builder.writeTimeout(20, TimeUnit.SECONDS)
         //错误重连
         builder.retryOnConnectionFailure(true)
-        builder.addInterceptor(BaseParamInterceptor()) // 添加公共参数
+        builder.addInterceptor(RequestParamsInterceptor()) // 添加公共参数
         okHttpClient = builder.build()
 
         gson = GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").serializeNulls().create()

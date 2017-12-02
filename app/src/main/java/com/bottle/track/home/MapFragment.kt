@@ -2,7 +2,9 @@ package com.bottle.track.home
 
 import android.os.Bundle
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.*
+import android.widget.Toast
 import com.amap.api.maps.AMap
 import com.amap.api.maps.MapView
 
@@ -10,13 +12,21 @@ import com.bottle.track.R
 import org.greenrobot.eventbus.EventBus
 import com.amap.api.location.AMapLocation
 import com.bottle.track.BaseFragment
-import com.bottle.track.TrackEvent
+import com.bottle.track.TrekEvent
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.CameraUpdateFactory
+import com.bottle.track.api.Api
+import com.bottle.track.api.BaseRequestBean
+import com.bottle.track.api.request.UploadPoi
+
 import com.bottle.track.lbs.MyOverlay
+import com.bottle.track.model.Poi
+import com.bottle.util.toJsonString
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 
 class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickListener, SearchView.OnQueryTextListener {
@@ -82,7 +92,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         mapView = view.findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
         amap = mapView?.map
-        amap?.isTrafficEnabled = true
+        amap?.isTrafficEnabled = false
         amap?.isMyLocationEnabled = true
         // amap?.uiSettings?.isZoomControlsEnabled = false
         overlay = MyOverlay(amap!!)
@@ -103,7 +113,32 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
     }
 
     override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.imgMyLocation ->{
+                val logtime = System.currentTimeMillis()
+                val p1 = Poi(112.1, 23.0, 500.0, logtime)
+                val p2 = Poi(112.1, 23.0, 500.0, logtime)
+                val p3 = Poi(112.1, 23.0, 500.0, logtime)
+                val points = listOf(p1, p2, p3)
+                val uploadPoints = UploadPoi(points)
+                val requestBean = BaseRequestBean(uploadPoints)
+                Api.api.httpService.uploadPoints(requestBean).subscribeOn(Schedulers.newThread())
+                        .observeOn(Schedulers.io())
+                        .doOnNext({
+                            // 这里可以进行耗时操作，如读写数据库等
+                            Log.d(TAG, "doOnNext")
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            Toast.makeText(context, response.info, Toast.LENGTH_SHORT).show()
+                            Log.d(TAG, toJsonString(response as Object))
 
+                        }, { error ->
+                            Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
+                            Log.d(TAG, toJsonString(error as Object))
+                        })
+            }
+        }
     }
 
     override fun onClose(): Boolean {
@@ -115,7 +150,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
     private var overlay: MyOverlay? = null
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onReceiveLocation(event: TrackEvent<Any>) {
+    fun onReceiveLocation(event: TrekEvent<Any>) {
         if (event.event is AMapLocation) {
             val location: AMapLocation = event.event as AMapLocation
             val position = LatLng(location.latitude, location.longitude)

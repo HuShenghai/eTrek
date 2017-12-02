@@ -2,7 +2,9 @@ package com.bottle.track
 
 import android.app.Application
 import android.os.StrictMode
+import android.text.TextUtils
 import com.bottle.util.CrashExceptionHandler
+import com.bottle.util.getAndroidId
 import com.bottle.util.network.INetworkStateObserver
 import com.bottle.util.network.NetworkStateReceiver
 import com.bottle.util.network.NetworkType
@@ -26,6 +28,13 @@ class MyApplication: Application(), INetworkStateObserver {
         private set
     var isForeground: Boolean = true  // APP是否正在前台运行
         private set
+    var androidId: String? = null
+    get(){
+        if(TextUtils.isEmpty(androidId)){
+            androidId = getAndroidId(this)
+        }
+        return androidId
+    }
 
     companion object {
         lateinit var app: MyApplication private set

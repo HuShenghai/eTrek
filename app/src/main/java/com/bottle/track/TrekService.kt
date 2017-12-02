@@ -11,16 +11,16 @@ import com.bottle.track.lbs.AMapLocation
 /**
  * 一个应用只有一个Service
  */
-class TrackService : Service() {
+class TrekService : Service() {
 
-    private val TAG = TrackService::class.java.simpleName
+    private val TAG = TrekService::class.java.simpleName
     private var handler: Handler? = null
     private var aMapLocation: AMapLocation? = null
 
     inner class MyBinder : Binder() {
 
-        val service: TrackService
-            get() = this@TrackService
+        val service: TrekService
+            get() = this@TrekService
     }
 
     override fun onCreate() {

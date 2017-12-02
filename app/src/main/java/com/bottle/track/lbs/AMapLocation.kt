@@ -8,7 +8,7 @@ import com.amap.api.location.AMapLocationClientOption.AMapLocationMode
 import com.amap.api.location.AMapLocationListener
 import com.bottle.track.BuildConfig
 import com.bottle.track.MyApplication
-import com.bottle.track.TrackEvent
+import com.bottle.track.TrekEvent
 import org.greenrobot.eventbus.EventBus
 
 class AMapLocation(private val observer: IOnReceiveLocation) {
@@ -27,7 +27,7 @@ class AMapLocation(private val observer: IOnReceiveLocation) {
                 if(BuildConfig.DEBUG) {
                     Log.d(TAG, amapLocation.toStr())
                 }
-                EventBus.getDefault().post(TrackEvent(1, "定位", amapLocation))
+                EventBus.getDefault().post(TrekEvent(1, "定位", amapLocation))
                 observer.onReceiveLocation(amapLocation)
                 //                amapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
                 //                amapLocation.getLatitude();//获取纬度
