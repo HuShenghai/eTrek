@@ -62,7 +62,7 @@ class AMapLocation(private val observer: IOnReceiveLocation) {
         mLocationOption?.isNeedAddress = true   //设置是否返回地址信息（默认返回地址信息）
         mLocationOption?.isOnceLocation = false //设置是否只定位一次,默认为false
         mLocationOption?.isMockEnable = false   //设置是否允许模拟位置,默认为false，不允许模拟位置
-        mLocationOption?.interval = 10000        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption?.interval = 2000        //设置定位间隔,单位毫秒,默认为2000ms
         mLocationClient?.setLocationOption(mLocationOption)
         mLocationClient?.setLocationListener(mLocationListener)
     }

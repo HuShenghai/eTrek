@@ -29,12 +29,6 @@ class MyApplication: Application(), INetworkStateObserver {
     var isForeground: Boolean = true  // APP是否正在前台运行
         private set
     var androidId: String? = null
-    get(){
-        if(TextUtils.isEmpty(androidId)){
-            androidId = getAndroidId(this)
-        }
-        return androidId
-    }
 
     companion object {
         lateinit var app: MyApplication private set
@@ -60,6 +54,7 @@ class MyApplication: Application(), INetworkStateObserver {
         if (BuildConfig.DEBUG) {
             StrictMode.enableDefaults()
         }
+        androidId = getAndroidId(this)
     }
 
     override fun onConnected(type: NetworkType) {

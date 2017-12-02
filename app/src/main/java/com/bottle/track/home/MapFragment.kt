@@ -23,7 +23,7 @@ import com.bottle.track.api.BaseRequestBean
 import com.bottle.track.api.request.UploadPoi
 
 import com.bottle.track.lbs.MyOverlay
-import com.bottle.track.model.Poi
+import com.bottle.track.model.TrekPoi
 import com.bottle.util.toJsonString
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -115,28 +115,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.imgMyLocation ->{
-                val logtime = System.currentTimeMillis()
-                val p1 = Poi(112.1, 23.0, 500.0, logtime)
-                val p2 = Poi(112.1, 23.0, 500.0, logtime)
-                val p3 = Poi(112.1, 23.0, 500.0, logtime)
-                val points = listOf(p1, p2, p3)
-                val uploadPoints = UploadPoi(points)
-                val requestBean = BaseRequestBean(uploadPoints)
-                Api.api.httpService.uploadPoints(requestBean).subscribeOn(Schedulers.newThread())
-                        .observeOn(Schedulers.io())
-                        .doOnNext({
-                            // 这里可以进行耗时操作，如读写数据库等
-                            Log.d(TAG, "doOnNext")
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
-                            Toast.makeText(context, response.info, Toast.LENGTH_SHORT).show()
-                            Log.d(TAG, toJsonString(response as Object))
-
-                        }, { error ->
-                            Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
-                            Log.d(TAG, toJsonString(error as Object))
-                        })
+                testUploadPoints()
             }
         }
     }
@@ -146,7 +125,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
     }
 
     private var isFirstLocation: Boolean = true // 第一次定位
-    private var isFollow: Boolean = false       // 地图显示位置是否跟随定位，默认false
+    private var isFollow: Boolean = false       // 地图显示位置是否跟随定位，默认 false
     private var overlay: MyOverlay? = null
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -165,5 +144,33 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
                 amap?.moveCamera(CameraUpdateFactory.changeLatLng(position))
             }
         }
+    }
+
+    private fun testUploadPoints(){
+        val logtime = System.currentTimeMillis()
+        val p1 = TrekPoi(112.1, 23.0, 500.0)
+        val p2 = TrekPoi(112.1, 23.0, 500.0)
+        val p3 = TrekPoi(112.1, 23.0, 500.0)
+        p1.logtime = logtime
+        p2.logtime = logtime
+        p3.logtime = logtime
+        val points = listOf(p1, p2, p3)
+        val uploadPoints = UploadPoi(points)
+        val requestBean = BaseRequestBean(uploadPoints)
+        Api.api.httpService.uploadPoints(requestBean).subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.io())
+                .doOnNext({
+                    // 这里可以进行耗时操作，如读写数据库等
+                    Log.d(TAG, "doOnNext")
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    Toast.makeText(context, response.info, Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, toJsonString(response as Object))
+
+                }, { error ->
+                    Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, toJsonString(error as Object))
+                })
     }
 }

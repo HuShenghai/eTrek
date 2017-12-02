@@ -13,7 +13,7 @@ import retrofit2.http.POST
  * @ClassName HttpService
  * @Author half_bottle
  * @Date 2017/12/2
- * @Description Trek app接口
+ * @Description Trek app 接口
  */
 interface HttpService {
 

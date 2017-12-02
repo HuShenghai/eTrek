@@ -3,6 +3,7 @@ package com.bottle.track.lbs
 import android.graphics.Color
 import com.amap.api.maps.AMap
 import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.Poi
 import com.amap.api.maps.model.Polyline
 import com.amap.api.maps.model.PolylineOptions
 
@@ -14,6 +15,7 @@ import com.amap.api.maps.model.PolylineOptions
  */
 class MyOverlay{
 
+    val poi: Poi? = null
     private val amap: AMap
     val latLngs: ArrayList<LatLng> = java.util.ArrayList()
     var polyline: Polyline? = null
