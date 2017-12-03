@@ -1,4 +1,4 @@
-package com.bottle.track.model
+package com.bottle.track.map.model
 
 /**
  * @ClassName Track

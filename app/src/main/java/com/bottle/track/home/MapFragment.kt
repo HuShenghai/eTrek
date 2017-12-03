@@ -22,8 +22,8 @@ import com.bottle.track.api.Api
 import com.bottle.track.api.BaseRequestBean
 import com.bottle.track.api.request.UploadPoi
 
-import com.bottle.track.lbs.MyOverlay
-import com.bottle.track.model.TrekPoi
+import com.bottle.track.map.MyOverlay
+import com.bottle.track.map.model.TrekPoi
 import com.bottle.util.toJsonString
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

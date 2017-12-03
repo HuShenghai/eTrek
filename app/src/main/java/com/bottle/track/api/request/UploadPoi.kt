@@ -1,7 +1,7 @@
 package com.bottle.track.api.request
 
-import com.bottle.track.model.GeoPoint
-import com.bottle.track.model.TrekPoi
+import com.bottle.track.map.model.GeoPoint
+import com.bottle.track.map.model.TrekPoi
 
 /**
  * @ClassName UploadPoi

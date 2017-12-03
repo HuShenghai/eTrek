@@ -6,7 +6,7 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.util.Log
-import com.bottle.track.lbs.AMapLocation
+import com.bottle.track.map.AMapLocation
 
 /**
  * 一个应用只有一个Service
