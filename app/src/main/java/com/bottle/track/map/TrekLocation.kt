@@ -11,7 +11,7 @@ import com.bottle.track.MyApplication
 import com.bottle.track.TrekEvent
 import org.greenrobot.eventbus.EventBus
 
-class AMapLocation(private val observer: IOnReceiveLocation) {
+class TrekLocation(private val observer: IOnReceiveLocation) {
 
     private val TAG = this.javaClass.simpleName
     private var mLocationClient: AMapLocationClient? = null
@@ -27,7 +27,6 @@ class AMapLocation(private val observer: IOnReceiveLocation) {
                 if(BuildConfig.DEBUG) {
                     Log.d(TAG, amapLocation.toStr())
                 }
-                EventBus.getDefault().post(TrekEvent(1, "定位", amapLocation))
                 observer.onReceiveLocation(amapLocation)
                 //                amapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
                 //                amapLocation.getLatitude();//获取纬度
@@ -57,12 +56,12 @@ class AMapLocation(private val observer: IOnReceiveLocation) {
     private fun setOption() {
         mLocationClient = AMapLocationClient(MyApplication.app)
         mLocationOption = AMapLocationClientOption()
-        //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+        //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors 是仅设备模式
         mLocationOption?.locationMode = AMapLocationMode.Hight_Accuracy
-        mLocationOption?.isNeedAddress = true   //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption?.isNeedAddress = false   //设置是否返回地址信息（默认返回地址信息）
         mLocationOption?.isOnceLocation = false //设置是否只定位一次,默认为false
         mLocationOption?.isMockEnable = false   //设置是否允许模拟位置,默认为false，不允许模拟位置
-        mLocationOption?.interval = 2000        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption?.interval = 5000        //设置定位间隔,单位毫秒,默认为2000ms
         mLocationClient?.setLocationOption(mLocationOption)
         mLocationClient?.setLocationListener(mLocationListener)
     }

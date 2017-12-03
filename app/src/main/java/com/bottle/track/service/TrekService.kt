@@ -1,21 +1,21 @@
-package com.bottle.track
+package com.bottle.track.service
 
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
-import android.os.Handler
 import android.os.IBinder
 import android.util.Log
-import com.bottle.track.map.AMapLocation
 
 /**
- * 一个应用只有一个Service
+ * @ClassName TrekService
+ * @Author half_bottle
+ * @Date 2017/12/3
+ * @Description eTrek 应用的唯一一个后台服务，目前用于后台定位
  */
 class TrekService : Service() {
 
     private val TAG = TrekService::class.java.simpleName
-    private var handler: Handler? = null
-    private var aMapLocation: AMapLocation? = null
+    private var trackManager: TrackManager = TrackManager()
 
     inner class MyBinder : Binder() {
 
@@ -25,28 +25,27 @@ class TrekService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        aMapLocation = AMapLocation(object : AMapLocation.IOnReceiveLocation {
-            override fun onReceiveLocation(arg0: com.amap.api.location.AMapLocation?) {
-                if (handler != null) {
-                    val msg = handler!!.obtainMessage()
-                    msg.what = MSG_RECEIVER_LOCATION
-                    msg.obj = arg0
-                    handler!!.sendMessage(msg)
-                }
-            }
-        })
-        aMapLocation?.start()
-        Log.d(TAG, "onCreate")
+
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.d(TAG, "onStartCommand")
+        if(intent == null) return super.onStartCommand(intent, flags, startId)
+        var command: Command<Any> = intent.getSerializableExtra(COMMAND) as Command<Any>
+        if(command != null){
+            when(command.command){
+                Command.START_LOCATION -> {trackManager.startLocation()}
+                Command.STOP_LOCATION -> {trackManager.stopLocation()}
+                Command.START_TRACKING ->{trackManager.startTracking()}
+                Command.STOP_TRACKING ->{trackManager.stopTracking()}
+            }
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
-        aMapLocation!!.stop()
+        trackManager.stopLocation()
         super.onDestroy()
     }
 
@@ -62,11 +61,8 @@ class TrekService : Service() {
         return super.onUnbind(intent)
     }
 
-    fun setHandler(handler: Handler) {
-        this.handler = handler
+    companion object {
+        val COMMAND = "command"
     }
 
-    companion object {
-        val MSG_RECEIVER_LOCATION = 0x1
-    }
 }

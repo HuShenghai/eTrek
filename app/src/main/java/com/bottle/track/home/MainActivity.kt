@@ -9,7 +9,8 @@ import android.view.MenuItem
 import com.bottle.track.BaseActivity
 import com.bottle.track.MyApplication
 import com.bottle.track.R
-import com.bottle.track.TrekService
+import com.bottle.track.service.Command
+import com.bottle.track.service.TrekService
 import com.bottle.util.hasPermission
 import com.bottle.util.requestPermission
 import kotlinx.android.synthetic.main.activity_main.*
@@ -61,6 +62,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                 .commit()
         navigation.selectedItemId = R.id.navigation_dashboard
         val locationIntent = Intent(MyApplication.app, TrekService::class.java)
+        locationIntent.putExtra(TrekService.COMMAND, Command(Command.START_LOCATION, "启动定位服务", ""))
         fLayoutContainer.postDelayed({ startService(locationIntent) }, 2000)
 
     }

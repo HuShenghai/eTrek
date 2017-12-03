@@ -36,6 +36,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
 
     private var mapView: MapView? = null
     private var amap: AMap? = null
+    private var center: LatLng? = null
 
     companion object {
 
@@ -115,7 +116,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.imgMyLocation ->{
-                testUploadPoints()
+                if(center != null) amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 19f))
             }
         }
     }
@@ -127,12 +128,14 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
     private var isFirstLocation: Boolean = true // 第一次定位
     private var isFollow: Boolean = false       // 地图显示位置是否跟随定位，默认 false
     private var overlay: MyOverlay? = null
+    private var tracking: Boolean = false       // 是否正在
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onReceiveLocation(event: TrekEvent<Any>) {
         if (event.event is AMapLocation) {
             val location: AMapLocation = event.event as AMapLocation
             val position = LatLng(location.latitude, location.longitude)
+            center = position
             overlay?.latLngs?.add(position)
             if(overlay?.latLngs!!.size > 1){
                 overlay?.updateOverlay()
