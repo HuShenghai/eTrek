@@ -4,7 +4,7 @@ package com.bottle.track.db.table
  * @ClassName LoginUser
  * @Author half_bottle
  * @Date 2017/12/2
- * @Description 用户表
+ * @Description eTrek 本地用户数据表
  */
 class TrekUser {
 

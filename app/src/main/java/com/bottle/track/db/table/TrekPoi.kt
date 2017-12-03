@@ -4,7 +4,7 @@ package com.bottle.track.db.table
  * @ClassName TrekPoi
  * @Author half_bottle
  * @Date 2017/12/3
- * @Description Trek 兴趣点的本地数据表
+ * @Description eTrek 兴趣点的本地数据表
  */
 class TrekPoi {
 

@@ -10,8 +10,8 @@ class Track(points: List<GeoPoint>): Polyline(points) {
 
     var beginTime: Long? = null   // 起始时间
     var endTime: Long? = null     // 结束时间
-    var speed: Double? = null     // 速度
-    var time: Int? = null         // 总耗时，单位秒吧
+    var speed: Double? = null     // 速度，单位：m/s
+    var time: Int? = null         // 耗时，单位：秒
     var description: String? = null
 
 }

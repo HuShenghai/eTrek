@@ -6,7 +6,7 @@ import com.bottle.track.map.model.Track
  * @ClassName TrekTrack
  * @Author half_bottle
  * @Date 2017/12/3
- * @Description
+ * @Description eTrek 本地轨迹数据表
  */
 class TrekTrack {
 
