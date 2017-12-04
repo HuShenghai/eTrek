@@ -32,8 +32,8 @@ fun requestPermission(activity: Activity, permission: String, requestCode: Int) 
     }
 }
 
-fun requestPermissions(activity: Activity, permission: Array<String>, requestCode: Int) {
-    if (!hasM() || permission.size < 1) {
+fun requestPermission(activity: Activity, permission: Array<String?>, requestCode: Int) {
+    if (!hasM() || permission.isEmpty()) {
         return
     }
     ActivityCompat.requestPermissions(activity, permission, requestCode)

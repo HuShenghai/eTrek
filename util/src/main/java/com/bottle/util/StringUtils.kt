@@ -4,6 +4,10 @@ import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.regex.Pattern
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 fun isEmpty(s: String?): Boolean {
     if(s == null) {
@@ -119,4 +123,55 @@ fun urlDecode(encodeString: String): String {
         result = encodeString
     }
     return result
+}
+
+
+/**
+ * 从格式化唯一id中获取时间戳
+ * @param fileCreateTime {@link com.bottle.util#getFormatId()}
+ * @return 格式不对返回0，否则返回时间戳
+ */
+fun formatFileCreateTime(fileCreateTime: String?): Long {
+    if (fileCreateTime == null || !isNumber(fileCreateTime)) {
+        return 0L
+    }
+    if (fileCreateTime.length >= 18) {
+        val year = fileCreateTime.substring(0, 2)
+        val month = fileCreateTime.substring(2, 4)
+        val date = fileCreateTime.substring(4, 6)
+        val hour = fileCreateTime.substring(6, 8)
+        val minute = fileCreateTime.substring(8, 10)
+        val second = fileCreateTime.substring(10, 12)
+        val millisecond = fileCreateTime.substring(12, 15)
+        val dateFormat = "20%s/%s/%s %s:%s:%s.%s"
+        val realDateTime = String.format(dateFormat, year, month, date, hour, minute, second, millisecond)
+        val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS")
+        var result = 0L
+        try {
+            val dateTime = sdf.parse(realDateTime)
+            result = dateTime.time
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+        return result
+    }
+    return java.lang.Long.parseLong(fileCreateTime)
+}
+
+/**
+ * 从时间戳获取一个唯一id，格式为：yyMMddHHmmssSSSxyz 即年(只取后面两位)月日时分秒毫秒+三位随机数(18位)
+ * @param currentTimeMillis
+ * @return yyMMddHHmmssSSSxyz yy只取后面两位
+ */
+fun getFormatId(currentTimeMillis: Long): String {
+    val date = Date(currentTimeMillis)
+    val simpleDateFormat = SimpleDateFormat("yyyyMMddHHmmssSSS")
+    val result = simpleDateFormat.format(date)
+    val result2 = result.substring(result.length - 15, result.length)
+    val random = Random()
+    val first = random.nextInt(10)
+    val second = random.nextInt(10)
+    val third = random.nextInt(10)
+    return result2 + first + second + third
 }

@@ -67,11 +67,18 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
     }
     private fun permission(){
+        val permissions = arrayListOf<String>()
         if(!hasPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)){
-            requestPermission(this, Manifest.permission.ACCESS_FINE_LOCATION,100)
+            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
         }
         if(!hasPermission(this, Manifest.permission.READ_PHONE_STATE)){
-            requestPermission(this, Manifest.permission.READ_PHONE_STATE, 101)
+            permissions.add(Manifest.permission.READ_PHONE_STATE)
         }
+        if(permissions.isEmpty()) return
+        val array = arrayOfNulls<String>(permissions.size)
+        for(index in permissions.indices){
+            array[index] = permissions[index]
+        }
+        requestPermission(this, array, 101)
     }
 }
