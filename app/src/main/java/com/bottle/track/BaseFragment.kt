@@ -2,6 +2,7 @@ package com.bottle.track
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.widget.Toast
 
 /**
  * @ClassName 
@@ -45,5 +46,9 @@ abstract class BaseFragment : Fragment(){
             return true
         }
         return false
+    }
+
+    fun showToast(toast: String){
+        Toast.makeText(context, toast, Toast.LENGTH_SHORT).show()
     }
 }

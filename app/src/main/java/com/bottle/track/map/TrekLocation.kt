@@ -1,6 +1,7 @@
 package com.bottle.track.map
 
 import android.util.Log
+import com.amap.api.location.AMapLocation
 
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -75,7 +76,7 @@ class TrekLocation(private val observer: IOnReceiveLocation) {
     }
 
     interface IOnReceiveLocation {
-        fun onReceiveLocation(arg0: com.amap.api.location.AMapLocation?)
+        fun onReceiveLocation(arg0: AMapLocation)
     }
 
 }

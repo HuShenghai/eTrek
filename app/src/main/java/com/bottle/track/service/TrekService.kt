@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import com.bottle.track.MyApplication
 
 /**
  * @ClassName TrekService
@@ -62,7 +63,14 @@ class TrekService : Service() {
     }
 
     companion object {
+
         val COMMAND = "command"
+
+        fun start(command: Command<Any>){
+            val locationIntent = Intent(MyApplication.app, TrekService::class.java)
+            locationIntent.putExtra(COMMAND, command)
+            MyApplication.app.startService(locationIntent)
+        }
     }
 
 }

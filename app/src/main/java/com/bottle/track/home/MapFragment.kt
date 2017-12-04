@@ -3,30 +3,34 @@ package com.bottle.track.home
 import android.os.Bundle
 import android.support.v7.widget.SearchView
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import com.amap.api.maps.AMap
-import com.amap.api.maps.MapView
-
-import com.bottle.track.R
-import org.greenrobot.eventbus.EventBus
 import com.amap.api.location.AMapLocation
-import com.bottle.track.BaseFragment
-import com.bottle.track.TrekEvent
-import kotlinx.android.synthetic.main.fragment_map.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
+import com.amap.api.maps.MapView
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.MyLocationStyle
+import com.bottle.track.BaseFragment
+import com.bottle.track.R
+import com.bottle.track.TrekEvent
 import com.bottle.track.api.Api
 import com.bottle.track.api.BaseRequestBean
 import com.bottle.track.api.request.UploadPoi
-
 import com.bottle.track.map.MyOverlay
 import com.bottle.track.map.model.TrekPoi
+import com.bottle.track.service.Command
+import com.bottle.track.service.TrackManager
+import com.bottle.track.service.TrekService
 import com.bottle.util.toJsonString
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_map.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickListener, SearchView.OnQueryTextListener {
@@ -75,9 +79,11 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
     override fun onResume() {
         super.onResume()
         mapView?.onResume()
+        foreground = true
     }
 
     override fun onPause() {
+        foreground = false
         super.onPause()
         mapView?.onPause()
     }
@@ -95,8 +101,12 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         amap = mapView?.map
         amap?.isTrafficEnabled = false
         amap?.isMyLocationEnabled = true
-        // amap?.uiSettings?.isZoomControlsEnabled = false
-        overlay = MyOverlay(amap!!)
+        val myLocationStyle  = MyLocationStyle()
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER)
+        myLocationStyle.interval(5000)
+        amap?.myLocationStyle = myLocationStyle
+        amap?.uiSettings?.isZoomControlsEnabled = true
+        overlay = MyOverlay(amap!!, TrackManager.latLngs)
         return view
     }
 
@@ -114,9 +124,24 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.imgMyLocation ->{
-                if(center != null) amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 19f))
+        when (v?.id) {
+            R.id.imgMyLocation -> {
+                if (center != null)
+                    amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 19f))
+            }
+            R.id.imgLayers -> {
+
+            }
+            R.id.imgTrack -> {
+                if(tracking){
+                    tracking = false
+                    TrekService.start(Command(Command.STOP_TRACKING, "停止记录轨迹", ""))
+                    showToast("停止记录轨迹")
+                }else{
+                    showToast("开始记录轨迹")
+                    TrekService.start(Command(Command.START_TRACKING, "开始记录轨迹", ""))
+                    tracking = true
+                }
             }
         }
     }
@@ -127,8 +152,9 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
 
     private var isFirstLocation: Boolean = true // 第一次定位
     private var isFollow: Boolean = false       // 地图显示位置是否跟随定位，默认 false
-    private var overlay: MyOverlay? = null
-    private var tracking: Boolean = false       // 是否正在
+    private var overlay: MyOverlay? = null      //
+    private var tracking: Boolean = false       // 是否正在记录轨迹
+    private var foreground: Boolean = true      // Fragment是否前台运行
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onReceiveLocation(event: TrekEvent<Any>) {
@@ -136,20 +162,24 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
             val location: AMapLocation = event.event as AMapLocation
             val position = LatLng(location.latitude, location.longitude)
             center = position
-            overlay?.latLngs?.add(position)
-            if(overlay?.latLngs!!.size > 1){
-                overlay?.updateOverlay()
+            if (tracking) {
+                if (overlay?.latLngs!!.size > 1) {
+                    overlay?.updateOverlay()
+                }
+            }
+            if (!foreground) {
+                return
             }
             if (isFirstLocation) {
                 isFirstLocation = false// 只在第一次定位时显示到定位中心
                 amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 19f))
-            } else if(isFollow){
+            } else if (isFollow) {
                 amap?.moveCamera(CameraUpdateFactory.changeLatLng(position))
             }
         }
     }
 
-    private fun testUploadPoints(){
+    private fun testUploadPoints() {
         val logtime = System.currentTimeMillis()
         val p1 = TrekPoi(112.1, 23.0, 500.0)
         val p2 = TrekPoi(112.1, 23.0, 500.0)

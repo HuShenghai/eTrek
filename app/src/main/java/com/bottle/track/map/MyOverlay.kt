@@ -17,11 +17,12 @@ class MyOverlay{
 
     val poi: Poi? = null
     private val amap: AMap
-    val latLngs: ArrayList<LatLng> = java.util.ArrayList()
+    val latLngs: ArrayList<LatLng>
     var polyline: Polyline? = null
 
-    constructor(amap: AMap){
+    constructor(amap: AMap, latLngs: ArrayList<LatLng>){
         this.amap = amap
+        this.latLngs = latLngs
     }
 
     fun updateOverlay(){
