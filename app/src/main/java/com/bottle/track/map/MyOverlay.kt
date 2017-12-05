@@ -31,7 +31,7 @@ class MyOverlay{
     }
 
     fun drawPolyLine(aMap: AMap, latLngs: ArrayList<LatLng>): Polyline? {
-        polyline = aMap?.addPolyline(PolylineOptions()
+        polyline = aMap.addPolyline(PolylineOptions()
                 .addAll(latLngs)
                 .width(10f)
                 .color(Color.argb(255, 1, 1, 1)))

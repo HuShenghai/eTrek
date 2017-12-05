@@ -14,17 +14,19 @@ import com.amap.api.maps.MapView
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
 import com.bottle.track.BaseFragment
+import com.bottle.track.MyApplication
 import com.bottle.track.R
 import com.bottle.track.TrekEvent
 import com.bottle.track.api.Api
 import com.bottle.track.api.BaseRequestBean
 import com.bottle.track.api.request.UploadPoi
+import com.bottle.track.db.GreenDaoImp
+import com.bottle.track.db.gen.TrekPoiDao
 import com.bottle.track.map.MyOverlay
 import com.bottle.track.map.model.TrekPoi
 import com.bottle.track.service.Command
 import com.bottle.track.service.TrackManager
 import com.bottle.track.service.TrekService
-import com.bottle.util.toJsonString
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_map.*
@@ -101,7 +103,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         amap = mapView?.map
         amap?.isTrafficEnabled = false
         amap?.isMyLocationEnabled = true
-        val myLocationStyle  = MyLocationStyle()
+        val myLocationStyle = MyLocationStyle()
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER)
         myLocationStyle.interval(5000)
         amap?.myLocationStyle = myLocationStyle
@@ -130,14 +132,14 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
                     amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 19f))
             }
             R.id.imgLayers -> {
-
+                // testPoiDatabase()
             }
             R.id.imgTrack -> {
-                if(tracking){
+                if (tracking) {
                     tracking = false
                     TrekService.start(Command(Command.STOP_TRACKING, "停止记录轨迹", ""))
                     showToast("停止记录轨迹")
-                }else{
+                } else {
                     showToast("开始记录轨迹")
                     TrekService.start(Command(Command.START_TRACKING, "开始记录轨迹", ""))
                     tracking = true
@@ -199,11 +201,32 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
                     Toast.makeText(context, response.info, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, toJsonString(response as Object))
+                    // Log.d(TAG, toJsonString(response as Object))
 
                 }, { error ->
                     Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, toJsonString(error as Object))
+                    // Log.d(TAG, toJsonString(error as Object))
                 })
+    }
+
+    private fun testPoiDatabase() {
+        val dao: TrekPoiDao? = MyApplication.app.daoSession?.trekPoiDao
+        val poi = com.bottle.track.db.schema.TrekPoi()
+        poi.longitude = 112.43
+        poi.latitude = 23.01
+        poi.altitude = 100.0
+        poi.logtime = System.currentTimeMillis()
+        poi.city = "深圳1"
+        poi.district = "南山1"
+        poi.description = "南山智园1"
+        val effect = dao?.insert(poi)
+        Log.d(TAG, "insert:" + effect)
+        var query = dao?.queryBuilder()
+        if (query != null) {
+            var result = query.list()
+            Log.d(TAG, "query:" + result.size)
+            Log.d(TAG, "query:" + result[0].description)
+
+        }
     }
 }

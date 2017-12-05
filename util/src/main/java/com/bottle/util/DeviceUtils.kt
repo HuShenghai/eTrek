@@ -10,8 +10,5 @@ import android.provider.Settings
  * @Description
  */
 fun getAndroidId(context: Context): String {
-    if(context == null){
-        return ""
-    }
     return Settings.System.getString(context.contentResolver, android.provider.Settings.Secure.ANDROID_ID)
 }

@@ -2,7 +2,8 @@ package com.bottle.track
 
 import android.app.Application
 import android.os.StrictMode
-import android.text.TextUtils
+import com.bottle.track.db.GreenDaoImp
+import com.bottle.track.db.gen.DaoSession
 import com.bottle.util.CrashExceptionHandler
 import com.bottle.util.getAndroidId
 import com.bottle.util.network.INetworkStateObserver
@@ -16,7 +17,7 @@ import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.DiskLogAdapter
 import com.orhanobut.logger.CsvFormatStrategy
 
-class MyApplication: Application(), INetworkStateObserver {
+class MyApplication : Application(), INetworkStateObserver {
 
     var currentActivity: BaseActivity? = null
         private set
@@ -29,6 +30,8 @@ class MyApplication: Application(), INetworkStateObserver {
     var isForeground: Boolean = true  // APP是否正在前台运行
         private set
     var androidId: String? = null
+
+    var daoSession: DaoSession? = null
 
     companion object {
         lateinit var app: MyApplication private set
@@ -55,6 +58,7 @@ class MyApplication: Application(), INetworkStateObserver {
             StrictMode.enableDefaults()
         }
         androidId = getAndroidId(this)
+        daoSession = GreenDaoImp.getInstance(this, androidId ?: "local").daoSession
     }
 
     override fun onConnected(type: NetworkType) {

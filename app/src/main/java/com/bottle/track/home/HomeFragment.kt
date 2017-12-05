@@ -4,18 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bottle.track.BaseFragment
 import com.bottle.track.R
-import com.bottle.track.api.Api
 import com.bottle.track.ui.coordinatorlayout.CollapsingToolbarLayoutActivity
-import com.bottle.util.toJsonString
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : BaseFragment(), View.OnClickListener {
@@ -77,22 +71,22 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
 
     }
 
-    private fun apiTest(){
-        Api.api.httpService.queryTest()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.io())
-                .doOnNext({
-                    // 这里可以进行耗时操作，如读写数据库等
-                    Log.d(TAG, "doOnNext")
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    Toast.makeText(context, response.info, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, toJsonString(response as Object))
-
-                }, { error ->
-                    Log.d(TAG, toJsonString(error as Object))
-                })
-    }
+//    private fun apiTest(){
+//        Api.api.httpService.queryTest()
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(Schedulers.io())
+//                .doOnNext({
+//                    // 这里可以进行耗时操作，如读写数据库等
+//                    Log.d(TAG, "doOnNext")
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ response ->
+//                    Toast.makeText(context, response.info, Toast.LENGTH_SHORT).show()
+//                    Log.d(TAG, GsonHelper.gsonHelper.toJson(response.result))
+//
+//                }, { error ->
+//                    Log.d(TAG, toJsonString(error as Object))
+//                })
+//    }
 
 }

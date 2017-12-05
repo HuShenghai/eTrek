@@ -42,18 +42,18 @@ class ExternalStorageUtils {
             return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
         }
 
-        /**
-         * 获取目录使用的空间大小
-         * @param path  检查的路径路径
-         * @return 在字节的可用空间
-         */
-        fun getUsableSpace(path: File): Long {
-            if (hasGingerbread()) {
-                return path.usableSpace
-            }
-            val stats = StatFs(path.path)
-            return stats.blockSize.toLong() * stats.availableBlocks.toLong()
-        }
+//        /**
+//         * 获取目录使用的空间大小
+//         * @param path  检查的路径路径
+//         * @return 在字节的可用空间
+//         */
+//        fun getUsableSpace(path: File): Long {
+//            if (hasGingerbread()) {
+//                return path.usableSpace
+//            }
+//            val stats = StatFs(path.path)
+//            return stats.blockSize.toLong() * stats.availableBlocks.toLong()
+//        }
 
         /**
          * 获得外部应用程序缓存目录 :/Android/data/com.package.name/cache/

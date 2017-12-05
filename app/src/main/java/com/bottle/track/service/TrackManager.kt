@@ -30,9 +30,9 @@ class TrackManager {
                 if(accuracy == null){
                     accuracy = Float.MAX_VALUE
                 }
-                if(20.0f < accuracy) {
-                    return
-                }
+//                if(20.0f < accuracy) {
+//                    return
+//                }
                 if(tracking){
                     recordLocation(location) // 记录轨迹
                 }

@@ -76,7 +76,7 @@ class TrekLocation(private val observer: IOnReceiveLocation) {
     }
 
     interface IOnReceiveLocation {
-        fun onReceiveLocation(arg0: AMapLocation)
+        fun onReceiveLocation(location: AMapLocation)
     }
 
 }

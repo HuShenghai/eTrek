@@ -58,6 +58,15 @@ android {
     lintOptions {
         abortOnError true
     }
+
+    sourceSets {
+        main.java.srcDirs += 'build/generated/source/greendao'
+    }
+}
+
+greendao {
+    schemaVersion 1
+    daoPackage 'com.bottle.track.db.gen'
 }
 
 dependencies {

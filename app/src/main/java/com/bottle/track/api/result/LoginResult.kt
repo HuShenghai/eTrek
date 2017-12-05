@@ -1,6 +1,6 @@
 package com.bottle.track.api.result
 
-import com.bottle.track.db.table.TrekUser
+import com.bottle.track.db.schema.TrekUser
 
 /**
  * @ClassName LoginResult

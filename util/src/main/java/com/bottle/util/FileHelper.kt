@@ -200,22 +200,21 @@ fun rename(origin: String, destination: String): Boolean {
 fun unAssertsZip(context: Context, assetName: String,
                  outputDirectory: String, isReWrite: Boolean) {
     val inputStream = context.assets.open(assetName)
-    unZip(context, inputStream, outputDirectory, isReWrite)
+    unZip(inputStream, outputDirectory, isReWrite)
 }
 
 @Throws(IOException::class)
-fun unFileZip(context: Context, fileName: String,
-              outputDirectory: String, isReWrite: Boolean) {
+fun unFileZip(fileName: String, outputDirectory: String, isReWrite: Boolean) {
     val file = File(fileName)
     if (!file.exists())
         return
     val inputStream = FileInputStream(file)
-    unZip(context, inputStream, outputDirectory, isReWrite)
+    unZip(inputStream, outputDirectory, isReWrite)
 }
 
 
 @Throws(IOException::class)
-fun unZip(context: Context, inputStream: InputStream,
+fun unZip(inputStream: InputStream,
           outputDirectory: String, isReWrite: Boolean) {
     var file = File(outputDirectory)
     if (!file.exists()) {

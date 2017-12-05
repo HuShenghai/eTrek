@@ -1,6 +1,5 @@
 package com.bottle.track.api.request
 
-import com.bottle.track.map.model.GeoPoint
 import com.bottle.track.map.model.TrekPoi
 
 /**
@@ -13,7 +12,7 @@ class UploadPoi {
 
     val points: List<TrekPoi> // 要上传的点集合
 
-    constructor(pois: List<TrekPoi>){
-        this.points = pois
+    constructor(points: List<TrekPoi>){
+        this.points = points
     }
 }
