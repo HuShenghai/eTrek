@@ -37,7 +37,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
-            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a','x86'
         }
     }
 
@@ -62,7 +62,7 @@ android {
 
 dependencies {
     compile project(':util')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -84,10 +84,14 @@ dependencies {
     compile thirdParty.gsonConverter
     compile thirdParty.greenDao
     compile thirdParty.eventBus
-
     compile 'com.amap.api:3dmap:latest.integration'
     compile 'com.amap.api:location:latest.integration'
     compile 'com.amap.api:search:latest.integration'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-
+    implementation files('libs/libthrift-0.10.0.jar')
+    implementation files('libs/mid-sdk-3.73.jar')
+    implementation files('libs/mta-android-sdk-3.2.1.jar')
+    implementation files('libs/open_sdk_r5923_lite.jar')
+    implementation files('libs/slf4j-api-1.7.24.jar')
+    implementation files('libs/track-sdk_v3.2.1.jar')
 }
