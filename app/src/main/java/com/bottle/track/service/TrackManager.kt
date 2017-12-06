@@ -33,12 +33,13 @@ class TrackManager {
     private var trekLocation: TrekLocation? = null
     private var tracking: Boolean = false       // 是否正在记录轨迹
     private var beginTrackingTime: Long = 0
-    private var geoPoints = ArrayList<GeoPoint>()
+    private var geoPoints = ArrayList<GeoPoint>()           // 每段的 Polyline
+    private val tracks = ArrayList<Track>()                 // 多段 Track
 
     fun startLocation() {
         trekLocation = TrekLocation(object : TrekLocation.IOnReceiveLocation {
             override fun onReceiveLocation(location: AMapLocation) {
-                if(!BuildConfig.DEBUG) {
+                if (!BuildConfig.DEBUG) {
                     var accuracy = location?.accuracy
                     if (accuracy == null) {
                         accuracy = Float.MAX_VALUE
@@ -50,7 +51,8 @@ class TrackManager {
                 if (tracking) {
                     recordLocation(location) // 记录轨迹
                 }
-                EventBus.getDefault().post(TrekEvent(1, "定位", location))
+                EventBus.getDefault().post(TrekEvent(
+                        TrekEvent.TYPE_RECEIVE_LOCATION, "接收到定位", location))
             }
         })
         trekLocation?.start()
@@ -70,30 +72,20 @@ class TrackManager {
     }
 
     fun stopTracking() {
+        Log.d(TAG, "停止轨迹记录，然后需要写入数据库等")
         tracking = false
         val endTrackingTime = System.currentTimeMillis()
-        Log.d(TAG, "停止轨迹记录，然后需要写入数据库等")
         val track = Track(geoPoints, beginTrackingTime, endTrackingTime)
-        val tracks = ArrayList<Track>()
         tracks.add(track)
         val trekTrack = TrekTrack(tracks, beginTrackingTime, endTrackingTime, "这是一条轨迹")
         val trekTrackDao = MyApplication.app.daoSession?.trekTrackDao
-        trekTrackDao?.insert(convertToDbClass(trekTrack))
-        ThreadExecutor.defaultInstance().doTask(Runnable {
-            Api.api.httpService.uploadTrekTrack(
-                    BaseRequestBean(convertToRequestBean(MyApplication.app.androidId!!, trekTrack)))
-                    .observeOn(Schedulers.io())
-                    .doOnNext({
-                        // 这里可以进行耗时操作，如读写数据库等
-                        Log.d(TAG, "doOnNext")
-                    })
-                    .subscribe({ response ->
-                        Log.d(TAG, "上传轨迹成功")
-
-                    }, { error ->
-                        Log.d(TAG, "上传轨迹失败：" + error.message)
-                    })
-        })
+        ThreadExecutor.defaultInstance().doTask(
+                Runnable {
+                    val localTrack = convertToDbClass(trekTrack)
+                    trekTrackDao?.insert(localTrack) // 插入数据库
+                    EventBus.getDefault().post(TrekEvent( // 发送到界面，然后提示是否上传
+                            TrekEvent.TYPE_RECORD_TRACK, "记录一条轨迹", localTrack))
+                })
     }
 
     fun recordLocation(location: AMapLocation) {
@@ -102,6 +94,7 @@ class TrackManager {
         val position = LatLng(location.latitude, location.longitude)
         MyApplication.app.cache.track.add(position)
         geoPoints.add(GeoPoint(location.longitude, location.latitude, location.altitude))
+        // 计算，如 1km 记一个Track，将轨迹分为多段，然后计算每段的属性
     }
 
 }

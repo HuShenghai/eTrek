@@ -1,7 +1,7 @@
 package com.bottle.track.api
 
 import com.bottle.track.api.request.UploadTrack
-import com.bottle.track.map.model.TrekTrack
+import com.bottle.track.db.schema.TrekTrack
 
 /**
  * @Date 2017/12/6 20:55
