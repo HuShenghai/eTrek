@@ -9,7 +9,8 @@ import android.view.MenuItem
 import com.bottle.track.BaseActivity
 import com.bottle.track.MyApplication
 import com.bottle.track.R
-import com.bottle.track.TrackService
+import com.bottle.track.service.Command
+import com.bottle.track.service.TrekService
 import com.bottle.util.hasPermission
 import com.bottle.util.requestPermission
 import kotlinx.android.synthetic.main.activity_main.*
@@ -51,7 +52,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
     private fun init() {
         homeFragment = HomeFragment.newInstance("", "1")
-        msgFragment = MsgFragment.newInstance("3", "3")
+        msgFragment = CollectionFragment.newInstance("3", "3")
         dashFragment = MapFragment.newInstance("2", "2")
         supportFragmentManager.beginTransaction()
                 .add(R.id.fLayoutContainer, homeFragment, "home")
@@ -60,14 +61,24 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                 .show(dashFragment)
                 .commit()
         navigation.selectedItemId = R.id.navigation_dashboard
-        val locationIntent = Intent(MyApplication.app, TrackService::class.java)
+        val locationIntent = Intent(MyApplication.app, TrekService::class.java)
+        locationIntent.putExtra(TrekService.COMMAND, Command(Command.START_LOCATION, "启动定位服务", ""))
         fLayoutContainer.postDelayed({ startService(locationIntent) }, 2000)
 
     }
     private fun permission(){
-        if(hasPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)){
-            return
+        val permissions = arrayListOf<String>()
+        if(!hasPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
         }
-        requestPermission(this, Manifest.permission.ACCESS_FINE_LOCATION,100)
+        if(!hasPermission(this, Manifest.permission.READ_PHONE_STATE)){
+            permissions.add(Manifest.permission.READ_PHONE_STATE)
+        }
+        if(permissions.isEmpty()) return
+        val array = arrayOfNulls<String>(permissions.size)
+        for(index in permissions.indices){
+            array[index] = permissions[index]
+        }
+        requestPermission(this, array, 101)
     }
 }

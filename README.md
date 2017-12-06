@@ -1,24 +1,32 @@
-# MProject
-
-## ????????
-
-1. app
-   
-   ?????demo
-   
-2. common
-    
-    ?????????Utils???????StringUtils??????CrashHandler?DisplayUtils?AndroidVersionCheck?XmlHelper?BitmapHelper?PermissionHelper?ZipHelper?FileHelper?ExternalUtils???
-    
-3. greendaodemo
-    
-    GreenDao ORM????demo
-    
-4. jsbridgedemo
-    
-    Java?JavaScript???demo
-    
-5. rxdemo
-    
-    RxAndroid?Retrofit?demo
-    
+# eTrek
+eTrek是一个用纯Kotlin开发的基于高德地图的位置收藏和轨迹记录应用。主要到的开源技术包括RxJava，Retrofit，OKHttp，GreenDao，Gson，Glide。用户可以方便地标记位置，记录运动轨迹，生成属于自己的时间线。可以对位置点和轨迹添加描述，类似日志类型。
+## 需求分解
+### 主页Map
+#### 1.显示地图和当前设备定位
+有一个按钮，点击显示当前设备的位置
+#### 2.GeoCode—地图识别点
+然后可以选择分享或者添加到收藏
+#### 3.根据输入内容搜索地名
+然后显示在地图上，然后可以选择分享或者添加到收藏
+#### 4.点击开始记录轨迹
+开始记录轨迹
+### 用户页面(我的)
+#### 1.设置
+1. 定位频率
+2. 底图选择
+3. 其它
+#### 2.账号
+1. 微信登录
+2. QQ登录
+#### 3.导出
+点和轨迹分开导出
+1. 导出geojson
+2. 导出kml
+3. 导出xml
+4. 导出html
+### 收藏
+位置收藏和轨迹收藏 均可以编辑，添加日志，描述等
+#### 点收藏
+默认按照添加收藏的时间排序，可以长按选中，然后调整顺序。滑动显示删除和编辑按钮，点击在地图上显示，然后可以分享或者选择用第三方应用打开，如高德、百度地图打开。可以添加一段文字。
+#### 轨迹收藏
+用户记录的轨迹，点击地图查看，滑动显示删除和编辑，编辑中可以添加一段文字。

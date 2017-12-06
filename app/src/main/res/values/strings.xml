@@ -1,12 +1,16 @@
 <resources>
     <!-- 第三方平台的 APP key -->
     <string name="amap_app_key" translatable="false">b1eeb247ea8e7c173205e336a6159e32</string>
-    <string name="bugly_app_key" translatable="false">cef89500f3</string>
+    <string name="bugly_app_key" translatable="false">881d02ffce</string>
 
     <string name="app_name">eTrek</string>
     <string name="title_home">我的</string>
     <string name="title_dashboard">地图</string>
-    <string name="title_notifications">消息</string>
+    <string name="title_collection">收藏</string>
+    <string name="setting">设置</string>
+    <string name="location">位置</string>
+    <string name="track">轨迹</string>
+    <string name="search">搜索</string>
 
     <string name="title_activity_collapsing_toolbar_layout">滑动测试</string>
     <string name="large_text">large text</string>

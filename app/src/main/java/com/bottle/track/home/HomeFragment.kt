@@ -3,22 +3,17 @@ package com.bottle.track.home
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import com.amap.api.maps.AMap
-import com.amap.api.maps.MapView
+import com.bottle.track.BaseActivity
+import com.bottle.track.BaseFragment
 import com.bottle.track.R
-import com.bottle.track.api.Api
-import com.bottle.util.toJsonString
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.bottle.track.user.LoginActivity
+import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(), View.OnClickListener {
+class HomeFragment : BaseFragment(), View.OnClickListener {
 
-    private val TAG: String? = "HomeFragment"
     private var mParam1: String? = null
     private var mParam2: String? = null
 
@@ -45,15 +40,23 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        btnSettings.setOnClickListener(this)
+
+    }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view: View = inflater!!.inflate(R.layout.fragment_home, container, false)
-        return view
+        return inflater!!.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
-
+            R.id.btnSettings ->{
+                // CollapsingToolbarLayoutActivity.start(context as Activity)
+                LoginActivity.start(context as BaseActivity, 100)
+            }
         }
     }
 
@@ -65,22 +68,26 @@ class HomeFragment : Fragment(), View.OnClickListener {
         super.onDetach()
     }
 
-    private fun apiTest(){
-        Api.api.httpService.queryTest()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.io())
-                .doOnNext({
-                    // 这里可以进行耗时操作，如读写数据库等
-                    Log.d(TAG, "doOnNext")
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    Toast.makeText(context, response.info, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, toJsonString(response as Object))
+    override fun fetchData() {
 
-                }, { error ->
-                    Log.d(TAG, toJsonString(error as Object))
-                })
     }
+
+//    private fun apiTest(){
+//        Api.api.httpService.queryTest()
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(Schedulers.io())
+//                .doOnNext({
+//                    // 这里可以进行耗时操作，如读写数据库等
+//                    Log.d(TAG, "doOnNext")
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ response ->
+//                    Toast.makeText(context, response.info, Toast.LENGTH_SHORT).show()
+//                    Log.d(TAG, GsonHelper.gsonHelper.toJson(response.result))
+//
+//                }, { error ->
+//                    Log.d(TAG, toJsonString(error as Object))
+//                })
+//    }
 
 }

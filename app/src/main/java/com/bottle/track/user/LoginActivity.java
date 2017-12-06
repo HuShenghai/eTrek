@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.bottle.track.BaseActivity;
 import com.bottle.track.R;
 import com.orhanobut.logger.Logger;
 import com.tencent.connect.UserInfo;
@@ -32,7 +32,7 @@ import javax.net.ssl.HttpsURLConnection;
  * @Description: QQ登录页面
  */
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     private Tencent mTencent;
     private LoginListener loginListener;
@@ -41,10 +41,10 @@ public class LoginActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
     public static final String PAR_KRY = "LoginActivity";
 
-   /* public static void startLoginActivityForResult(Context context, int requestCode) {
+   public static void start(BaseActivity context, int requestCode) {
         Intent intent = new Intent(context, LoginActivity.class);
-        context.startActivity(intent);
-    }*/
+        context.startActivityForResult(intent, requestCode);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -33,7 +33,7 @@ android {
         minSdkVersion config.minSdkVersion
         targetSdkVersion config.targetSdkVersion
         versionCode 1
-        versionName "0.2.1.1"
+        versionName "0.5.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
@@ -45,19 +45,28 @@ android {
         release {
             signingConfig signingConfigs.key_release
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
             signingConfig signingConfigs.key_debug
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
     lintOptions {
         abortOnError true
     }
+
+    sourceSets {
+        main.java.srcDirs += 'build/generated/source/greendao'
+    }
+}
+
+greendao {
+    schemaVersion 1
+    daoPackage 'com.bottle.track.db.gen'
 }
 
 dependencies {
@@ -71,6 +80,7 @@ dependencies {
     compile supportLibrary.design
     compile supportLibrary.supportV4
     compile supportLibrary.constraintLayout
+    compile supportLibrary.cardView
     compile thirdParty.bugly
     compile thirdParty.buglyNative
     compile thirdParty.logger

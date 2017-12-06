@@ -4,7 +4,9 @@ import okhttp3.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-
+/**
+ * 只是熟悉一下OkHttp
+ */
 class OKHttpImp {
 
     private var JSON = MediaType.parse("application/json; charset=utf-8")

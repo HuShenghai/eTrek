@@ -1,6 +1,6 @@
 package com.bottle.track
 
-class TrackEvent<T>(type: Int, description: String, event: T) {
+class TrekEvent<T>(type: Int, description: String, event: T) {
 
     var type: Int? = 0
     private set
