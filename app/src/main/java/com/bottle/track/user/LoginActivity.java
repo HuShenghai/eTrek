@@ -17,7 +17,6 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -29,6 +28,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Administrator on 2017/12/2 0002.
+ *
  * @Description: QQ登录页面
  */
 
@@ -36,12 +36,12 @@ public class LoginActivity extends BaseActivity {
 
     private Tencent mTencent;
     private LoginListener loginListener;
-    private boolean isLogin, isGetUserInfo;
+    private boolean isGetUserInfo;
     private String token, openid, expires, nickname, gender, figureurl, unionid;
     private final String TAG = this.getClass().getSimpleName();
     public static final String PAR_KRY = "LoginActivity";
 
-   public static void start(BaseActivity context, int requestCode) {
+    public static void start(BaseActivity context, int requestCode) {
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivityForResult(intent, requestCode);
     }
@@ -52,19 +52,12 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         permission();
         qqLogin();
-        if (isLogin == true) {
-            getUserInfo();
-            getQQUnionid();
-            if (isGetUserInfo == true) {
+        if (isGetUserInfo == true) {
                 handleQQUserInfo();
                 finish();
-            } else {
-                setResult(RESULT_CANCELED);
             }
-        } else {
-            setResult(RESULT_CANCELED);
-        }
     }
+
     //退出登录
     /*
         public void qqLoginOut() {
@@ -73,6 +66,7 @@ public class LoginActivity extends BaseActivity {
     private void permission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
     }
+
     /**
      * 在某些低端机上调用登录后，由于内存紧张导致APP被系统回收，登录成功后无法成功回传数据
      * 可在调用login的Activity或者Fragment重写onActivityResult方法
@@ -86,6 +80,7 @@ public class LoginActivity extends BaseActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
     /**
      * @Description: QQ登录, 校验登陆态
      */
@@ -96,6 +91,7 @@ public class LoginActivity extends BaseActivity {
             mTencent.login(this, Config.QQ_SCOPE, loginListener);
         }
     }
+
     //实现回调,OpenAPI V3.0。
     class LoginListener implements IUiListener {
         @Override
@@ -110,7 +106,7 @@ public class LoginActivity extends BaseActivity {
                         && !TextUtils.isEmpty(openid)) {
                     mTencent.setAccessToken(token, expires);
                     mTencent.setOpenId(openid);
-                    isLogin = true;
+                    getUserInfo();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -126,6 +122,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onCancel() {
             Toast.makeText(LoginActivity.this, "QQ登录取消", Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
@@ -144,11 +141,11 @@ public class LoginActivity extends BaseActivity {
                             gender = jsonObject.getString("gender");
                             figureurl = jsonObject.getString("figureurl");
                             isGetUserInfo = true;
-                        } catch (JSONException e) {
+                            getQQUnionid();
+                        } catch (Exception e) {
                             e.printStackTrace();
+                            Logger.e(TAG, e.getMessage());
                         }
-                    } else {
-                        isGetUserInfo = false;
                     }
                 }
 
@@ -156,12 +153,14 @@ public class LoginActivity extends BaseActivity {
                 public void onError(UiError uiError) {
                     Logger.e(TAG, "获取qq用户信息错误：" + uiError.toString());
                     Toast.makeText(LoginActivity.this, "获取QQ用户信息失败", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_CANCELED);
                 }
 
                 @Override
                 public void onCancel() {
                     Logger.e(TAG, "获取QQ用户信息取消");
                     Toast.makeText(LoginActivity.this, "获取QQ用户信息取消", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_CANCELED);
                 }
             });
         }
