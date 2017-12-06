@@ -1,5 +1,6 @@
 package com.bottle.track.map.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.annotations.NonNull;
@@ -15,9 +16,9 @@ public class Polyline {
     private GeoPoint startPoint; // 起点
     private GeoPoint endPoint;   // 终点
     private double distance;     // 总长度
-    private List<GeoPoint> points;
+    private ArrayList<GeoPoint> points;
 
-    public Polyline(@NonNull List<GeoPoint> points){
+    public Polyline(@NonNull ArrayList<GeoPoint> points){
         this.points = points;
         this.startPoint = points.get(0);
         this.endPoint = points.get(points.size() - 1);
@@ -36,7 +37,7 @@ public class Polyline {
         return distance;
     }
 
-    public List<GeoPoint> getPoints() {
+    public ArrayList<GeoPoint> getPoints() {
         return points;
     }
 }

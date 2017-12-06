@@ -25,15 +25,16 @@ public class TrekTrack {
     private Long id; // 目前是必须的（see http://greenrobot.org/greendao/documentation/modelling-entities/）
 
     @Convert(columnType = String.class, converter = TrekTrackConverter.class)
-    public ArrayList<Track> tracks;       // 过程中的多段
-    public double distance;          // 总里程
-    public int time;                 // 总耗时，单位秒吧
-    public int speed;                // 平均速度
-    public long beginTime;           // 起始时间
-    public long endTime;             // 结束时间
-    @Generated(hash = 1831790689)
+    private ArrayList<Track> tracks;       // 过程中的多段
+    private double distance;          // 总里程
+    private int time;                 // 总耗时，单位秒吧
+    private int speed;                // 平均速度
+    private long beginTime;           // 起始时间
+    private long endTime;             // 结束时间
+    private String description;        // 描述
+    @Generated(hash = 710943902)
     public TrekTrack(Long id, ArrayList<Track> tracks, double distance, int time, int speed,
-            long beginTime, long endTime) {
+            long beginTime, long endTime, String description) {
         this.id = id;
         this.tracks = tracks;
         this.distance = distance;
@@ -41,6 +42,7 @@ public class TrekTrack {
         this.speed = speed;
         this.beginTime = beginTime;
         this.endTime = endTime;
+        this.description = description;
     }
     @Generated(hash = 1236525096)
     public TrekTrack() {
@@ -87,5 +89,11 @@ public class TrekTrack {
     public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
-
+    public String getDescription() {
+        return this.description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+ 
 }

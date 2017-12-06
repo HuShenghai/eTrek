@@ -132,7 +132,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
                     amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 19f))
             }
             R.id.imgLayers -> {
-                // testPoiDatabase()
+                testPoiDatabase()
             }
             R.id.imgTrack -> {
                 if (tracking) {
