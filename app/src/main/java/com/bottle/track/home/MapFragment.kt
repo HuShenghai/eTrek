@@ -108,7 +108,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         myLocationStyle.interval(5000)
         amap?.myLocationStyle = myLocationStyle
         amap?.uiSettings?.isZoomControlsEnabled = true
-        overlay = MyOverlay(amap!!, TrackManager.latLngs)
+        overlay = MyOverlay(MyApplication.app.cache.track)
         return view
     }
 
@@ -166,7 +166,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
             center = position
             if (tracking) {
                 if (overlay?.latLngs!!.size > 1) {
-                    overlay?.updateOverlay()
+                    overlay?.updateOverlay(amap!!)
                 }
             }
             if (!foreground) {

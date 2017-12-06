@@ -18,11 +18,11 @@ public class Track extends Polyline{
     private int time;           // 耗时，单位：秒
     public String description;  // 描述
 
-    public Track(@NonNull List<GeoPoint> points, long beginTime, long endTime, int speed){
+    public Track(@NonNull List<GeoPoint> points, long beginTime, long endTime){
         super(points);
         this.beginTime = beginTime;
         this.endTime = endTime;
-        this.speed = speed;
+        this.speed = 0; // 需要计算
         this.time = (int)(endTime - beginTime) / 1000;
     }
 }

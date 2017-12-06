@@ -15,17 +15,14 @@ import com.amap.api.maps.model.PolylineOptions
  */
 class MyOverlay{
 
-    val poi: Poi? = null
-    private val amap: AMap
     val latLngs: ArrayList<LatLng>
     var polyline: Polyline? = null
 
-    constructor(amap: AMap, latLngs: ArrayList<LatLng>){
-        this.amap = amap
+    constructor(latLngs: ArrayList<LatLng>){
         this.latLngs = latLngs
     }
 
-    fun updateOverlay(){
+    fun updateOverlay(amap: AMap){
         polyline?.remove()
         drawPolyLine(amap, latLngs)
     }
@@ -34,7 +31,7 @@ class MyOverlay{
         polyline = aMap.addPolyline(PolylineOptions()
                 .addAll(latLngs)
                 .width(10f)
-                .color(Color.argb(255, 1, 1, 1)))
+                .color(Color.argb(255, 10, 246, 110)))
         return polyline
     }
 }

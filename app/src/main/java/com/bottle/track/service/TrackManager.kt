@@ -3,6 +3,7 @@ package com.bottle.track.service
 import android.util.Log
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.model.LatLng
+import com.bottle.track.MyApplication
 import com.bottle.track.TrekEvent
 import com.bottle.track.map.TrekLocation
 import org.greenrobot.eventbus.EventBus
@@ -18,10 +19,6 @@ class TrackManager {
     private val TAG = TrackManager::class.java.simpleName
     private var trekLocation: TrekLocation? = null
     private var tracking: Boolean = false       // 是否正在记录轨迹
-
-    companion object {
-        val latLngs: ArrayList<LatLng> = arrayListOf()
-    }
 
     fun startLocation(){
         trekLocation = TrekLocation(object : TrekLocation.IOnReceiveLocation {
@@ -49,13 +46,12 @@ class TrackManager {
 
     fun startTracking(){
         tracking = true
-        latLngs.clear()
+        MyApplication.app.cache.track.clear()
         Log.d(TAG, "开始记录轨迹")
     }
 
     fun stopTracking(){
         tracking = false
-        latLngs.clear()
         Log.d(TAG, "停止轨迹记录，然后需要写入数据库等")
     }
 
@@ -63,7 +59,7 @@ class TrackManager {
         // 收到定位信息，在这里判断这个点是否需要加入到轨迹中 1.精度要求；2.与上一个点的时间与距离等
         Log.d(TAG, "收到定位信息")
         val position = LatLng(location.latitude, location.longitude)
-        latLngs.add(position)
+        MyApplication.app.cache.track.add(position)
     }
 
 }
