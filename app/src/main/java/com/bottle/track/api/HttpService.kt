@@ -1,8 +1,9 @@
 package com.bottle.track.api
 
-import com.bottle.track.api.request.QueryPoi
 import com.bottle.track.api.request.LoginUser
+import com.bottle.track.api.request.QueryPoi
 import com.bottle.track.api.request.UploadPoi
+import com.bottle.track.api.result.InitLoginResult
 import com.bottle.track.api.result.LoginResult
 import io.reactivex.Observable
 import retrofit2.http.Body
@@ -31,7 +32,7 @@ interface HttpService {
 
     // 登录初始化
     @POST("/auth/init")
-    fun authInit(@Body requesParams: BaseRequestBean<Any?>): Observable<BaseResponseBean<Any>>
+    fun authInit(@Body requesParams: BaseRequestBean<Any?>): Observable<BaseResponseBean<InitLoginResult>>
 
     // 登录
     @POST("/api/auth/login")
