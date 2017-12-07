@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bottle.track.BaseFragment
+import com.bottle.track.MyApplication
 import com.bottle.track.R
+import com.bottle.track.db.gen.TrekTrackDao
 
 /**
  * @ClassName TrackFragment
@@ -22,6 +24,8 @@ class TrackFragment: BaseFragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val dao: TrekTrackDao? = MyApplication.app.daoSession?.trekTrackDao
+        var tracks = dao?.queryBuilder()?.list()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

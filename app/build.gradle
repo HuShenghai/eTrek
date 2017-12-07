@@ -94,9 +94,10 @@ dependencies {
     compile thirdParty.gsonConverter
     compile thirdParty.greenDao
     compile thirdParty.eventBus
-    compile 'com.amap.api:3dmap:latest.integration'
-    compile 'com.amap.api:location:latest.integration'
-    compile 'com.amap.api:search:latest.integration'
+    compile thirdParty.amap3D
+    compile thirdParty.amapLocation
+    compile thirdParty.amapSearch
+
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation files('libs/libthrift-0.10.0.jar')
     implementation files('libs/mid-sdk-3.73.jar')
