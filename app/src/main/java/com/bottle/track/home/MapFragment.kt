@@ -13,20 +13,19 @@ import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
-import com.bottle.track.BaseFragment
-import com.bottle.track.MyApplication
-import com.bottle.track.R
-import com.bottle.track.TrekEvent
+import com.bottle.track.*
 import com.bottle.track.api.Api
 import com.bottle.track.api.BaseRequestBean
+import com.bottle.track.api.convertToRequestBean
 import com.bottle.track.api.request.UploadPoi
-import com.bottle.track.db.GreenDaoImp
 import com.bottle.track.db.gen.TrekPoiDao
+import com.bottle.track.db.schema.TrekTrack
 import com.bottle.track.map.MyOverlay
 import com.bottle.track.map.model.TrekPoi
 import com.bottle.track.service.Command
-import com.bottle.track.service.TrackManager
 import com.bottle.track.service.TrekService
+import com.bottle.track.ui.dialog.IDialogListener
+import com.bottle.track.ui.dialog.SimpleQuestionDialog
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_map.*
@@ -159,7 +158,16 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
     private var foreground: Boolean = true      // Fragment是否前台运行
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onReceiveLocation(event: TrekEvent<Any>) {
+    fun onReceiveEvent(event: TrekEvent<Any>) {
+        when (event.type) {
+            TrekEvent.TYPE_RECEIVE_LOCATION -> updateTrackOverlay(event)
+            TrekEvent.TYPE_RECORD_TRACK -> {
+                recordTrack(event)
+            }
+        }
+    }
+
+    private fun updateTrackOverlay(event: TrekEvent<Any>) {
         if (event.event is AMapLocation) {
             val location: AMapLocation = event.event as AMapLocation
             val position = LatLng(location.latitude, location.longitude)
@@ -173,11 +181,46 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
                 return
             }
             if (isFirstLocation) {
-                isFirstLocation = false// 只在第一次定位时显示到定位中心
+                isFirstLocation = false // 只在第一次定位时显示到定位中心
                 amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 19f))
             } else if (isFollow) {
                 amap?.moveCamera(CameraUpdateFactory.changeLatLng(position))
             }
+        }
+    }
+
+    private fun recordTrack(event: TrekEvent<Any>) {
+//        var question = SimpleQuestionDialog.newInstance("是否上传轨迹到服务器")
+//        question.setListener(object :IDialogListener{
+//            override fun onOk() {
+//
+//            }
+//
+//            override fun onCancle() {
+//
+//            }
+//
+//        })
+//        val activity = context as BaseActivity
+//        question.show(activity.fragmentManager, "tag")
+        if (event.event is TrekTrack) {
+            val track: TrekTrack = event.event as TrekTrack
+            Api.api.httpService.uploadTrekTrack(
+                    BaseRequestBean(convertToRequestBean(MyApplication.app.androidId!!, track)))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(Schedulers.io())
+                    .doOnNext({
+                        // 这里可以进行耗时操作，如读写数据库等
+                        Log.d(TAG, "doOnNext")
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ response ->
+                        Log.d(TAG, "上传轨迹成功")
+                        showToast("上传轨迹成功")
+                    }, { error ->
+                        Log.d(TAG, "上传轨迹失败：" + error.message)
+                        showToast("上传轨迹失败：" + error.message)
+                    })
         }
     }
 
@@ -192,7 +235,8 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         val points = listOf(p1, p2, p3)
         val uploadPoints = UploadPoi(points)
         val requestBean = BaseRequestBean(uploadPoints)
-        Api.api.httpService.uploadPoints(requestBean).subscribeOn(Schedulers.newThread())
+        Api.api.httpService.uploadPoints(requestBean)
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.io())
                 .doOnNext({
                     // 这里可以进行耗时操作，如读写数据库等

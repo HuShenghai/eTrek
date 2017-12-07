@@ -16,4 +16,9 @@ class TrekEvent<T>(type: Int, description: String, event: T) {
         this.info = description
         this.event = event
     }
+
+    companion object {
+        val TYPE_RECEIVE_LOCATION = 1    // 接收到定位信息
+        val TYPE_RECORD_TRACK = 2        // 记录一条轨迹
+    }
 }

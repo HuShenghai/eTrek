@@ -4,6 +4,7 @@ import com.bottle.track.api.request.LoginUser
 import com.bottle.track.api.request.QueryPoi
 import com.bottle.track.api.request.UploadPoi
 import com.bottle.track.api.result.InitLoginResult
+import com.bottle.track.api.request.UploadTrack
 import com.bottle.track.api.result.LoginResult
 import io.reactivex.Observable
 import retrofit2.http.Body
@@ -41,6 +42,9 @@ interface HttpService {
     // 注销登录  reqbody:{login_token:"dafejfkfjkrgrgr"}
     @POST("/auth/logout")
     fun logout(@Body requesParams: BaseRequestBean<Map<String, Any>>): Observable<BaseResponseBean<List<Any>>>
+
+    @POST("/api/route/uploadtrack")
+    fun uploadTrekTrack(@Body requesParams: BaseRequestBean<UploadTrack>): Observable<BaseResponseBean<Any>>
 }
 
 

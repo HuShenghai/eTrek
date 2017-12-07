@@ -1,5 +1,7 @@
 package com.bottle.track.map.model;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.annotations.NonNull;
@@ -18,7 +20,7 @@ public class Track extends Polyline{
     private int time;           // 耗时，单位：秒
     public String description;  // 描述
 
-    public Track(@NonNull List<GeoPoint> points, long beginTime, long endTime){
+    public Track(@NonNull ArrayList<GeoPoint> points, long beginTime, long endTime){
         super(points);
         this.beginTime = beginTime;
         this.endTime = endTime;

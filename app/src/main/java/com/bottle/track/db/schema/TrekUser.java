@@ -22,15 +22,15 @@ public class TrekUser {
     private String openid;
     private String nickname;
     private String avatar_url;
-    private String gender;
+    private int gender;
     private String unionid;
 
     @Index(unique = true)
-    public String uid; // uid 唯一
+    public int uid; // uid 唯一
 
-    @Generated(hash = 1186242441)
+    @Generated(hash = 333693279)
     public TrekUser(Long id, String init_token, String thrid_type, String openid, String nickname,
-            String avatar_url, String gender, String unionid, String uid) {
+            String avatar_url, int gender, String unionid, int uid) {
         this.id = id;
         this.init_token = init_token;
         this.thrid_type = thrid_type;
@@ -94,11 +94,11 @@ public class TrekUser {
         this.avatar_url = avatar_url;
     }
 
-    public String getGender() {
+    public int getGender() {
         return this.gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
@@ -110,13 +110,12 @@ public class TrekUser {
         this.unionid = unionid;
     }
 
-    public String getUid() {
+    public int getUid() {
         return this.uid;
     }
 
-    public void setUid(String uid) {
+    public void setUid(int uid) {
         this.uid = uid;
     }
-
 
 }
