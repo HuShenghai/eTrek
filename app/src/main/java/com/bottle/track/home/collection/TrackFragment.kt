@@ -2,6 +2,7 @@ package com.bottle.track.home.collection
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,8 @@ import com.bottle.track.BaseFragment
 import com.bottle.track.MyApplication
 import com.bottle.track.R
 import com.bottle.track.db.gen.TrekTrackDao
+import com.bottle.track.db.schema.TrekTrack
+import kotlinx.android.synthetic.main.fragment_track.*
 
 /**
  * @ClassName TrackFragment
@@ -26,6 +29,9 @@ class TrackFragment: BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         val dao: TrekTrackDao? = MyApplication.app.daoSession?.trekTrackDao
         var tracks = dao?.queryBuilder()?.list()
+        val adapter = TrackAdapter(context, tracks as List<TrekTrack>)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = adapter
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

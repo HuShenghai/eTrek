@@ -47,6 +47,7 @@ class CollectionFragment : BaseFragment(), ViewPager.OnPageChangeListener, TabLa
         tabLayout.addTab(tabLayout.newTab().setText("位置"))
         tabLayout.addTab(tabLayout.newTab().setText("轨迹"))
         tabLayout.addOnTabSelectedListener(this)
+        tabLayout.getTabAt(1)?.select()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

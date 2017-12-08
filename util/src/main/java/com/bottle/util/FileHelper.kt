@@ -170,6 +170,7 @@ fun writeTxtFile(path: String, content: String, code: String): Boolean {
         write = OutputStreamWriter(fs, encode)
         writer = BufferedWriter(write)
         writer.write(content)
+        writer.flush() // 写入存储卡
         result = true
     } catch (e: Exception) {
         e.printStackTrace()

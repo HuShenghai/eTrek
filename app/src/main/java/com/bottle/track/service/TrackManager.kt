@@ -17,6 +17,7 @@ import com.bottle.track.map.TrekLocation
 import com.bottle.track.map.model.GeoPoint
 import com.bottle.track.map.model.Track
 import com.bottle.track.map.model.TrekTrack
+import com.bottle.util.DateTimeHelper
 import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -77,7 +78,8 @@ class TrackManager {
         val endTrackingTime = System.currentTimeMillis()
         val track = Track(geoPoints, beginTrackingTime, endTrackingTime)
         tracks.add(track)
-        val trekTrack = TrekTrack(tracks, beginTrackingTime, endTrackingTime, "这是一条轨迹")
+        val description = DateTimeHelper.dateFormat(Date()) + " 徒步"
+        val trekTrack = TrekTrack(tracks, beginTrackingTime, endTrackingTime, description)
         val trekTrackDao = MyApplication.app.daoSession?.trekTrackDao
         ThreadExecutor.defaultInstance().doTask(
                 Runnable {

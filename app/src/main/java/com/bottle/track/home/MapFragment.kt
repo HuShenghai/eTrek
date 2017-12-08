@@ -24,8 +24,6 @@ import com.bottle.track.map.MyOverlay
 import com.bottle.track.map.model.TrekPoi
 import com.bottle.track.service.Command
 import com.bottle.track.service.TrekService
-import com.bottle.track.ui.dialog.IDialogListener
-import com.bottle.track.ui.dialog.SimpleQuestionDialog
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_map.*
@@ -162,7 +160,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         when (event.type) {
             TrekEvent.TYPE_RECEIVE_LOCATION -> updateTrackOverlay(event)
             TrekEvent.TYPE_RECORD_TRACK -> {
-                recordTrack(event)
+                if(!BuildConfig.DEBUG) recordTrack(event) // 测试时暂时不上传
             }
         }
     }

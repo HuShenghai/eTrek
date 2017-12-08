@@ -19,17 +19,12 @@ import java.util.concurrent.TimeUnit
 class ThreadExecutor private constructor() {
 
     private val TAG = ThreadExecutor::class.java.simpleName
-    private var executorService: ExecutorService? = null
+    private val executorService: ExecutorService
 
     init {
-        if (this.executorService == null) {
-            val count = Math.min(3, (Runtime.getRuntime().availableProcessors() * 1.2 + 1).toInt())
-            this.executorService = ThreadPoolExecutor(
-                    count,
-                    count,
-                    10000,
-                    TimeUnit.MILLISECONDS, LinkedBlockingQueue())
-        }
+        val count = Math.min(3, (Runtime.getRuntime().availableProcessors() * 1.2 + 1).toInt())
+        this.executorService = ThreadPoolExecutor(count, count, 10000,
+                TimeUnit.MILLISECONDS, LinkedBlockingQueue())
     }
 
     fun doTask(task: Runnable) {
