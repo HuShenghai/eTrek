@@ -97,6 +97,7 @@ dependencies {
     compile thirdParty.amap3D
     compile thirdParty.amapLocation
     compile thirdParty.amapSearch
+    compile thirdParty.recyclerviewAnimators
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation files('libs/libthrift-0.10.0.jar')

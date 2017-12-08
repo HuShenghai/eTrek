@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bottle.track.db.schema.TrekTrack
 import android.view.LayoutInflater
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import com.bottle.track.R
@@ -16,11 +17,12 @@ import com.bottle.track.R
  * @Version 1.0.0
  * @Description TrekTrack 适配器
  */
-class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
+class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickListener{
 
     private val context: Context
     private val tracks: List<TrekTrack>
     private val layoutInflater: LayoutInflater
+    private var onItemClickListener: OnItemClickListener? = null
 
     constructor(context: Context, tracks: List<TrekTrack>){
         this.context = context
@@ -29,6 +31,7 @@ class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+        holder?.itemView?.tag = position
         if(holder is ItemViewHolder){
             val track = tracks[position]
             holder.initItem(track)
@@ -36,18 +39,32 @@ class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        return ItemViewHolder(layoutInflater.inflate(R.layout.item_track, parent, false))
+        var view = layoutInflater.inflate(R.layout.item_track, parent, false)
+        view.setOnClickListener(this)
+        return ItemViewHolder(view)
     }
 
     override fun getItemCount(): Int {
         return tracks.size
     }
+
+    override fun onClick(v: View?) {
+        onItemClickListener?.onItemClick(v, v?.tag as Int)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener){
+        this.onItemClickListener = listener
+    }
+}
+
+interface OnItemClickListener{
+    fun onItemClick(view: View?, position: Int)
 }
 
 class ItemViewHolder: RecyclerView.ViewHolder{
 
-    val imgTrackType: ImageView
-    val tvTrackDescription: TextView
+    private val imgTrackType: ImageView
+    private val tvTrackDescription: TextView
 
     constructor(view: View): super(view){
         imgTrackType = view.findViewById(R.id.imgTrackType)

@@ -48,7 +48,7 @@ ext {
             safewebviewbridge: 'cn.pedant.safewebviewbridge:library:1.4',            // Java与JavaScript的通信，需要添加mavenCentral()
             jsBridge         : 'com.github.lzyzsd:jsbridge:1.0.4',                   // jsbridgeJava与JavaScript的通信，需要添加maven { url "https://jitpack.io" }
             greenDao         : 'org.greenrobot:greendao:3.2.2',
-
+            recyclerviewAnimators: 'jp.wasabeef:recyclerview-animators:2.2.7',       // RecyclerView Item的动画效果
             amap3D           : 'com.amap.api:3dmap:5.6.0',
             amapLocation     : 'com.amap.api:location:3.6.1',
             amapSearch       : 'com.amap.api:search:5.5.0'

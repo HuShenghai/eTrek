@@ -1,24 +1,18 @@
 package com.bottle.track.service
 
 import android.util.Log
-import android.widget.Toast
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.model.LatLng
 import com.bottle.track.BuildConfig
 import com.bottle.track.MyApplication
 import com.bottle.track.ThreadExecutor
 import com.bottle.track.TrekEvent
-import com.bottle.track.api.Api
-import com.bottle.track.api.BaseRequestBean
-import com.bottle.track.api.convertToRequestBean
-import com.bottle.track.api.request.UploadTrack
 import com.bottle.track.db.convertToDbClass
 import com.bottle.track.map.TrekLocation
 import com.bottle.track.map.model.GeoPoint
 import com.bottle.track.map.model.Track
 import com.bottle.track.map.model.TrekTrack
-import com.bottle.util.DateTimeHelper
-import io.reactivex.schedulers.Schedulers
+import com.bottle.util.dateFormat
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -78,7 +72,7 @@ class TrackManager {
         val endTrackingTime = System.currentTimeMillis()
         val track = Track(geoPoints, beginTrackingTime, endTrackingTime)
         tracks.add(track)
-        val description = DateTimeHelper.dateFormat(Date()) + " 徒步"
+        val description = dateFormat(Date()) + " 徒步"
         val trekTrack = TrekTrack(tracks, beginTrackingTime, endTrackingTime, description)
         val trekTrackDao = MyApplication.app.daoSession?.trekTrackDao
         ThreadExecutor.defaultInstance().doTask(

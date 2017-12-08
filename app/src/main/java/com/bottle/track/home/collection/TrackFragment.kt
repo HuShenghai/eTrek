@@ -11,6 +11,10 @@ import com.bottle.track.MyApplication
 import com.bottle.track.R
 import com.bottle.track.db.gen.TrekTrackDao
 import com.bottle.track.db.schema.TrekTrack
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
+import jp.wasabeef.recyclerview.animators.FlipInBottomXAnimator
+import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator
 import kotlinx.android.synthetic.main.fragment_track.*
 
 /**
@@ -19,7 +23,14 @@ import kotlinx.android.synthetic.main.fragment_track.*
  * @Date 2017/11/25
  * @Description
  */
-class TrackFragment: BaseFragment() {
+class TrackFragment: BaseFragment(), OnItemClickListener {
+
+    override fun onItemClick(view: View?, position: Int) {
+        showToast(tracks!![position].description)
+    }
+
+    var tracks: List<TrekTrack>? = null
+    var adapter: TrackAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,10 +39,14 @@ class TrackFragment: BaseFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val dao: TrekTrackDao? = MyApplication.app.daoSession?.trekTrackDao
-        var tracks = dao?.queryBuilder()?.list()
-        val adapter = TrackAdapter(context, tracks as List<TrekTrack>)
+        tracks = dao?.queryBuilder()?.list()
+        adapter = TrackAdapter(context, tracks as List<TrekTrack>)
+        adapter?.setOnItemClickListener(this)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = adapter
+        var animaAdatper = ScaleInAnimationAdapter(adapter)
+        animaAdatper.setDuration(700)
+        animaAdatper.setFirstOnly(false)
+        recyclerView.adapter = animaAdatper
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
