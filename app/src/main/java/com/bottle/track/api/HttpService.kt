@@ -32,7 +32,7 @@ interface HttpService {
     fun points(@Body requesParams: BaseRequestBean<QueryPoi>): Observable<BaseResponseBean<UploadPoi>>
 
     // 登录初始化
-    @POST("/auth/init")
+    @POST("/api/auth/init")
     fun authInit(@Body requesParams: BaseRequestBean<Any?>): Observable<BaseResponseBean<InitLoginResult>>
 
     // 登录
@@ -40,7 +40,7 @@ interface HttpService {
     fun login(@Body requesParams: BaseRequestBean<LoginUser>): Observable<BaseResponseBean<LoginResult>>
 
     // 注销登录  reqbody:{login_token:"dafejfkfjkrgrgr"}
-    @POST("/auth/logout")
+    @POST("/api/auth/logout")
     fun logout(@Body requesParams: BaseRequestBean<Map<String, Any>>): Observable<BaseResponseBean<List<Any>>>
 
     @POST("/api/route/uploadtrack")

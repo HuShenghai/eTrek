@@ -14,10 +14,10 @@ android {
 
     signingConfigs {
         key_release {
-            keyAlias 'bottle'
-            keyPassword 'bottle0618'
-            storePassword 'bottle0618'
-            storeFile rootProject.file('bottle.keystore.jks')
+            keyAlias 'bottle_release'
+            keyPassword 'bottle123456'
+            storePassword 'bottle123456'
+            storeFile rootProject.file('bottle_release.jks')
         }
 
         key_debug {
@@ -42,6 +42,7 @@ android {
     }
 
     buildTypes {
+
         release {
             signingConfig signingConfigs.key_release
             minifyEnabled false
@@ -51,6 +52,7 @@ android {
         debug {
             signingConfig signingConfigs.key_debug
             minifyEnabled false
+            debuggable false
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

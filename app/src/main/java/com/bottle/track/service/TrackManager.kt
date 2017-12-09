@@ -69,6 +69,9 @@ class TrackManager {
     fun stopTracking() {
         Log.d(TAG, "停止轨迹记录，然后需要写入数据库等")
         tracking = false
+        if(geoPoints.size < 2){
+            return // 两个点才能算一条线，直接返回即可
+        }
         val endTrackingTime = System.currentTimeMillis()
         val track = Track(geoPoints, beginTrackingTime, endTrackingTime)
         tracks.add(track)

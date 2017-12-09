@@ -46,6 +46,10 @@ fun dateFormat(time: String): String {
     return dateFormat(d)
 }
 
+/**
+ * @param timeMs 时间，单位毫秒
+ * @return hh:mm:ss or mm:ss
+ */
 fun stringForTime(timeMs: Int): String {
     val totalSeconds = timeMs / 1000
     val seconds = totalSeconds % 60

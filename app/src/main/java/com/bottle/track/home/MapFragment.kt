@@ -188,19 +188,6 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
     }
 
     private fun recordTrack(event: TrekEvent<Any>) {
-//        var question = SimpleQuestionDialog.newInstance("是否上传轨迹到服务器")
-//        question.setListener(object :IDialogListener{
-//            override fun onOk() {
-//
-//            }
-//
-//            override fun onCancle() {
-//
-//            }
-//
-//        })
-//        val activity = context as BaseActivity
-//        question.show(activity.fragmentManager, "tag")
         if (event.event is TrekTrack) {
             val track: TrekTrack = event.event as TrekTrack
             Api.api.httpService.uploadTrekTrack(
