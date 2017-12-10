@@ -2,7 +2,6 @@ package com.bottle.track
 
 import android.app.Application
 import android.os.StrictMode
-import com.amap.api.maps.model.LatLng
 import com.bottle.track.db.GreenDaoImp
 import com.bottle.track.db.gen.DaoSession
 import com.bottle.util.CrashExceptionHandler

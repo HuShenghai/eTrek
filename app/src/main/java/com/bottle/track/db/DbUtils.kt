@@ -10,12 +10,14 @@ import com.bottle.track.db.schema.TrekTrack
  */
 fun convertToDbClass(trekTrack: com.bottle.track.map.model.TrekTrack): TrekTrack{
     val trek = TrekTrack()
+    trek.type = trekTrack.type
     trek.tracks = trekTrack.tracks
     trek.distance = trekTrack.distance
     trek.time = trekTrack.time
     trek.speed = trekTrack.speed
     trek.beginTime = trekTrack.beginTime
     trek.endTime = trekTrack.endTime
+    trek.title = trekTrack.title
     trek.description = trekTrack.description
     return trek
 }

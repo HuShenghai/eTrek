@@ -14,7 +14,7 @@ class UploadTrack{
     constructor(login_token: String,
                 tracks: ArrayList<Track>,
                 distance: Double,
-                time: Int,
+                time: Long,
                 speed: Int,
                 beginTime: Long,
                 endTime: Long,
@@ -31,7 +31,7 @@ class UploadTrack{
     var login_token: String? = null
     var tracks: ArrayList<Track>? = null       // 过程中的多段
     var distance: Double? = null          // 总里程，单位米
-    var time: Int = 0                 // 总耗时，单位秒
+    var time: Long = 0                 // 总耗时，单位秒
     var speed: Int = 0                // 平均速度，单位：m/s，显示的时候根据实际可以显示为km/s
     var begin_time: Long = 0           // 起始时间
     var end_time: Long = 0             // 结束时间

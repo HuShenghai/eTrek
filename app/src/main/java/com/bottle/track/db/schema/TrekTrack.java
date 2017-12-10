@@ -26,29 +26,31 @@ public class TrekTrack implements Serializable{
 
     @Id(autoincrement = true)
     private Long id; // 目前是必须的（see http://greenrobot.org/greendao/documentation/modelling-entities/）
-
+    private int type;                  // 类型
+    private double distance;           // 总里程
+    private long time;                  // 总耗时，单位毫秒
+    private int speed;                 // 平均速度
+    private long beginTime;            // 起始时间
+    private long endTime;              // 结束时间
+    private String title;              // 标题
+    private String description;        // 描述
     @Convert(columnType = String.class, converter = TrekTrackConverter.class)
     private ArrayList<Track> tracks;       // 过程中的多段
-    private double distance;          // 总里程
-    private int time;                 // 总耗时，单位秒吧
-    private int speed;                // 平均速度
-    private long beginTime;           // 起始时间
-    private long endTime;             // 结束时间
-    private String description;        // 描述
 
-    @Generated(hash = 710943902)
-    public TrekTrack(Long id, ArrayList<Track> tracks, double distance, int time, int speed,
-            long beginTime, long endTime, String description) {
+    @Generated(hash = 10847592)
+    public TrekTrack(Long id, int type, double distance, long time, int speed, long beginTime,
+            long endTime, String title, String description, ArrayList<Track> tracks) {
         this.id = id;
-        this.tracks = tracks;
+        this.type = type;
         this.distance = distance;
         this.time = time;
         this.speed = speed;
         this.beginTime = beginTime;
         this.endTime = endTime;
+        this.title = title;
         this.description = description;
+        this.tracks = tracks;
     }
-
     @Generated(hash = 1236525096)
     public TrekTrack() {
     }
@@ -58,11 +60,11 @@ public class TrekTrack implements Serializable{
     public void setId(Long id) {
         this.id = id;
     }
-    public ArrayList<Track> getTracks() {
-        return this.tracks;
+    public int getType() {
+        return this.type;
     }
-    public void setTracks(ArrayList<Track> tracks) {
-        this.tracks = tracks;
+    public void setType(int type) {
+        this.type = type;
     }
     public double getDistance() {
         return this.distance;
@@ -70,10 +72,10 @@ public class TrekTrack implements Serializable{
     public void setDistance(double distance) {
         this.distance = distance;
     }
-    public int getTime() {
+    public long getTime() {
         return this.time;
     }
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
     }
     public int getSpeed() {
@@ -94,11 +96,23 @@ public class TrekTrack implements Serializable{
     public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
+    public String getTitle() {
+        return this.title;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
     public String getDescription() {
         return this.description;
     }
     public void setDescription(String description) {
         this.description = description;
     }
- 
+    public ArrayList<Track> getTracks() {
+        return this.tracks;
+    }
+    public void setTracks(ArrayList<Track> tracks) {
+        this.tracks = tracks;
+    }
+
 }

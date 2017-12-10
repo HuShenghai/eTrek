@@ -37,7 +37,7 @@ class TrekService : Service() {
             when(command.command){
                 Command.START_LOCATION -> {trackManager.startLocation()}
                 Command.STOP_LOCATION -> {trackManager.stopLocation()}
-                Command.START_TRACKING ->{trackManager.startTracking()}
+                Command.START_TRACKING ->{trackManager.startTracking(command)}
                 Command.STOP_TRACKING ->{trackManager.stopTracking()}
             }
         }

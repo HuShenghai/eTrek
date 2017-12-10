@@ -11,6 +11,7 @@ import com.bottle.track.db.convertToDbClass
 import com.bottle.track.map.TrekLocation
 import com.bottle.track.map.model.GeoPoint
 import com.bottle.track.map.model.Track
+import com.bottle.track.map.model.TrackType
 import com.bottle.track.map.model.TrekTrack
 import com.bottle.util.dateFormat
 import org.greenrobot.eventbus.EventBus
@@ -30,6 +31,7 @@ class TrackManager {
     private var beginTrackingTime: Long = 0
     private var geoPoints = ArrayList<GeoPoint>()           // 每段的 Polyline
     private val tracks = ArrayList<Track>()                 // 多段 Track
+    private var trackType: TrackType? = TrackType.PEDESTRIANISM
 
     fun startLocation() {
         trekLocation = TrekLocation(object : TrekLocation.IOnReceiveLocation {
@@ -58,16 +60,20 @@ class TrackManager {
         Log.d(TAG, "停止定位服务")
     }
 
-    fun startTracking() {
+    fun startTracking(command: Command<Any>) {
+        var type = command.data
+        if(type is TrackType){
+            trackType = type
+        }else{
+            trackType = TrackType.FREE_STROKE // 默认自由行
+        }
         beginTrackingTime = System.currentTimeMillis()
         tracking = true
         MyApplication.app.cache.track.clear()
         geoPoints.clear()
-        Log.d(TAG, "开始记录轨迹")
     }
 
     fun stopTracking() {
-        Log.d(TAG, "停止轨迹记录，然后需要写入数据库等")
         tracking = false
         if(geoPoints.size < 2){
             return // 两个点才能算一条线，直接返回即可
@@ -75,21 +81,21 @@ class TrackManager {
         val endTrackingTime = System.currentTimeMillis()
         val track = Track(geoPoints, beginTrackingTime, endTrackingTime)
         tracks.add(track)
-        val description = dateFormat(Date()) + " 徒步"
-        val trekTrack = TrekTrack(tracks, beginTrackingTime, endTrackingTime, description)
-        val trekTrackDao = MyApplication.app.daoSession?.trekTrackDao
+        val title = dateFormat(Date()) + "-" + MyApplication.app.getString(trackType!!.getName())
+        val trekTrack = TrekTrack(trackType!!.type, tracks, beginTrackingTime, endTrackingTime, title)
         ThreadExecutor.defaultInstance().doTask(
                 Runnable {
                     val localTrack = convertToDbClass(trekTrack)
-                    trekTrackDao?.insert(localTrack) // 插入数据库
-                    EventBus.getDefault().post(TrekEvent( // 发送到界面，然后提示是否上传
+                    MyApplication.app.daoSession?.trekTrackDao?.insert(localTrack)
+                    EventBus.getDefault().post(TrekEvent(
                             TrekEvent.TYPE_RECORD_TRACK, "记录一条轨迹", localTrack))
                 })
     }
 
+    /**
+     * 收到定位信息，在这里判断这个点是否需要加入到轨迹中 1.精度要求；2.与上一个点的时间与距离等
+     */
     fun recordLocation(location: AMapLocation) {
-        // 收到定位信息，在这里判断这个点是否需要加入到轨迹中 1.精度要求；2.与上一个点的时间与距离等
-        Log.d(TAG, "收到定位信息")
         val position = LatLng(location.latitude, location.longitude)
         MyApplication.app.cache.track.add(position)
         geoPoints.add(GeoPoint(location.longitude, location.latitude, location.altitude))

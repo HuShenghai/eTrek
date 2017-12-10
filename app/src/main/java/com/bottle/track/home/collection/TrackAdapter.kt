@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.bottle.track.db.schema.TrekTrack
 import android.view.LayoutInflater
-import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -75,16 +74,19 @@ class ItemViewHolder: RecyclerView.ViewHolder{
     val imgMore: ImageView
     val imgTrackType: ImageView
     val tvTrackDescription: TextView
+    val tvTrackTitle: TextView
 
     constructor(view: View): super(view){
         llContent = view.findViewById(R.id.llContent)
         imgTrackType = view.findViewById(R.id.imgTrackType)
         tvTrackDescription = view.findViewById(R.id.tvTrackDescription)
         imgMore = view.findViewById(R.id.imgMore)
+        this.tvTrackTitle = view.findViewById(R.id.tvTrackTitle)
     }
 
     fun initItem(track: TrekTrack){
         tvTrackDescription.text = track.description
+        tvTrackTitle.text = track.title
     }
 }
 

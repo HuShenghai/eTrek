@@ -22,6 +22,7 @@ import com.bottle.track.db.gen.TrekPoiDao
 import com.bottle.track.db.schema.TrekTrack
 import com.bottle.track.map.MyOverlay
 import com.bottle.track.map.business.TrackEditorActivity
+import com.bottle.track.map.model.TrackType
 import com.bottle.track.map.model.TrekPoi
 import com.bottle.track.service.Command
 import com.bottle.track.service.TrekService
@@ -139,7 +140,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
                     showToast("停止记录轨迹")
                 } else {
                     showToast("开始记录轨迹")
-                    TrekService.start(Command(Command.START_TRACKING, "开始记录轨迹", ""))
+                    TrekService.start(Command(Command.START_TRACKING, "开始记录轨迹", TrackType.PEDESTRIANISM))
                     tracking = true
                 }
             }
@@ -161,7 +162,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
         when (event.type) {
             TrekEvent.TYPE_RECEIVE_LOCATION -> updateTrackOverlay(event)
             TrekEvent.TYPE_RECORD_TRACK -> {
-                if(!BuildConfig.DEBUG) recordTrack(event) // 测试时暂时不上传
+                TrackEditorActivity.start(activity, event.event as TrekTrack, 0)
             }
         }
     }
@@ -185,28 +186,6 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
             } else if (isFollow) {
                 amap?.moveCamera(CameraUpdateFactory.changeLatLng(position))
             }
-        }
-    }
-
-    private fun recordTrack(event: TrekEvent<Any>) {
-        if (event.event is TrekTrack) {
-            val track: TrekTrack = event.event as TrekTrack
-            Api.api.httpService.uploadTrekTrack(
-                    BaseRequestBean(convertToRequestBean(MyApplication.app.androidId!!, track)))
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(Schedulers.io())
-                    .doOnNext({
-                        // 这里可以进行耗时操作，如读写数据库等
-                        Log.d(TAG, "doOnNext")
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ response ->
-                        Log.d(TAG, "上传轨迹成功")
-                        showToast("上传轨迹成功")
-                    }, { error ->
-                        Log.d(TAG, "上传轨迹失败：" + error.message)
-                        showToast("上传轨迹失败：" + error.message)
-                    })
         }
     }
 

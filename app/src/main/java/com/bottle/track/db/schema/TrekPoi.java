@@ -17,15 +17,17 @@ public class TrekPoi {
     @Id(autoincrement = true)
     private Long id;// 目前是必须的（see http://greenrobot.org/greendao/documentation/modelling-entities/）
 
-    private double longitude;           // 经度
-    private double latitude;              // 纬度
-    private double altitude;              // 海拔
+    private double longitude;     // 经度
+    private double latitude;      // 纬度
+    private double altitude;      // 海拔
     private long logtime;         // 记录时间
     private String province;      // 省
     private String city;          // 市
     private String district;      // 区/县
     private String name;          // 地名
+    private String title;         // 标题
     private String description;   // 描述，提供给用户，作游记等
+    private String tags;          // 兴趣点添加标签
 
     TrekPoi(double longitude, double latitude, double altitude) {
         this.longitude = longitude;
@@ -33,9 +35,10 @@ public class TrekPoi {
         this.altitude = altitude;
     }
 
-    @Generated(hash = 246300383)
+    @Generated(hash = 714176516)
     public TrekPoi(Long id, double longitude, double latitude, double altitude, long logtime,
-            String province, String city, String district, String name, String description) {
+            String province, String city, String district, String name, String title,
+            String description, String tags) {
         this.id = id;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -45,7 +48,9 @@ public class TrekPoi {
         this.city = city;
         this.district = district;
         this.name = name;
+        this.title = title;
         this.description = description;
+        this.tags = tags;
     }
 
     @Generated(hash = 1905468925)
@@ -124,12 +129,28 @@ public class TrekPoi {
         this.name = name;
     }
 
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return this.description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTags() {
+        return this.tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 
 }
