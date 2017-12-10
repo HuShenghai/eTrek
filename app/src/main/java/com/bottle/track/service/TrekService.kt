@@ -29,7 +29,7 @@ class TrekService : Service() {
 
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "onStartCommand")
         if(intent == null) return super.onStartCommand(intent, flags, startId)
         var command: Command<Any> = intent.getSerializableExtra(COMMAND) as Command<Any>

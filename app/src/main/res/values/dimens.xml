@@ -4,6 +4,7 @@
     <dimen name="app_padding_right">16dp</dimen>
     <dimen name="app_actionbar_height">48dp</dimen>
     <dimen name="app_input_height">40dp</dimen>
+    <dimen name="app_bottom_height">45dp</dimen>
 
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>

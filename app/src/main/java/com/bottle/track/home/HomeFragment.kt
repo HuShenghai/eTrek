@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.bottle.track.BaseActivity
 import com.bottle.track.BaseFragment
 import com.bottle.track.R
+import com.bottle.track.ui.coordinatorlayout.CollapsingToolbarLayoutActivity
 import com.bottle.track.user.LoginActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -42,7 +43,10 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btnSettings.setOnClickListener(this)
+        llSetting.setOnClickListener(this)
+        llUserInfo.setOnClickListener(this)
+        imgUserLogo.setOnClickListener(this)
+        llMyLocation.setOnClickListener(this)
 
     }
 
@@ -53,10 +57,10 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
-            R.id.btnSettings ->{
-                // CollapsingToolbarLayoutActivity.start(context as Activity)
-                LoginActivity.start(context as BaseActivity, 100)
-            }
+            R.id.llSetting ->{ CollapsingToolbarLayoutActivity.start(activity) }
+            R.id.llUserInfo -> { LoginActivity.start(context as BaseActivity, 100) }
+            R.id.imgUserLogo -> { showToast("要换头像吗？") }
+            R.id.llMyLocation -> { showToast("查看当前位置")}
         }
     }
 

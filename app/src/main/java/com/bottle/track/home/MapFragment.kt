@@ -33,8 +33,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
-class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickListener, SearchView.OnQueryTextListener {
+class MapFragment : BaseFragment(), SearchView.OnCloseListener,
+        View.OnClickListener, SearchView.OnQueryTextListener {
 
     private var mParam1: String? = null
     private var mParam2: String? = null
@@ -138,6 +138,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener, View.OnClickList
                     tracking = false
                     TrekService.start(Command(Command.STOP_TRACKING, "停止记录轨迹", ""))
                     showToast("停止记录轨迹")
+                    overlay?.remove(amap!!)
                 } else {
                     showToast("开始记录轨迹")
                     TrekService.start(Command(Command.START_TRACKING, "开始记录轨迹", TrackType.PEDESTRIANISM))

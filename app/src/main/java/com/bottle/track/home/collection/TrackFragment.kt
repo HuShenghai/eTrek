@@ -3,6 +3,7 @@ package com.bottle.track.home.collection
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +25,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @Date 2017/11/25
  * @Description
  */
-class TrackFragment: BaseFragment(), OnItemClickListener {
+class TrackFragment: BaseFragment(), OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private final val REQUEST_EDIT = 0x13
 
@@ -68,6 +69,8 @@ class TrackFragment: BaseFragment(), OnItemClickListener {
         animaAdatper.setDuration(700)
         animaAdatper.setFirstOnly(false)
         recyclerView.adapter = animaAdatper
+
+        swipeRefreshLayout.setOnRefreshListener(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -102,20 +105,17 @@ class TrackFragment: BaseFragment(), OnItemClickListener {
         }
     }
 
+    override fun onRefresh() {
+        tracks.clear()
+        initData()
+        swipeRefreshLayout.isRefreshing = false
+    }
+
     companion object {
 
         private val ARG_PARAM1 = "param1"
         private val ARG_PARAM2 = "param2"
 
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CollectionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         fun newInstance(param1: String, param2: String): TrackFragment {
             val fragment = TrackFragment()
             val args = Bundle()

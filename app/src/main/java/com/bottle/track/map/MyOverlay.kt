@@ -27,11 +27,15 @@ class MyOverlay{
         drawPolyLine(amap, latLngs)
     }
 
-    fun drawPolyLine(aMap: AMap, latLngs: ArrayList<LatLng>): Polyline? {
+    private fun drawPolyLine(aMap: AMap, latLngs: ArrayList<LatLng>): Polyline? {
         polyline = aMap.addPolyline(PolylineOptions()
                 .addAll(latLngs)
-                .width(10f)
+                .width(18f)
                 .color(Color.argb(255, 10, 246, 110)))
         return polyline
+    }
+
+    fun remove(amap: AMap){
+        polyline?.remove()
     }
 }

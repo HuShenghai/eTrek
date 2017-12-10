@@ -3,6 +3,7 @@ package com.bottle.track.map.business
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.LatLng
@@ -12,8 +13,14 @@ import com.bottle.track.R
 import com.bottle.track.db.schema.TrekTrack
 import com.bottle.track.map.MyOverlay
 import kotlinx.android.synthetic.main.activity_track_preview.*
+import kotlinx.android.synthetic.main.title_layout.*
 
-class TrackPreviewActivity : BaseActivity() {
+class TrackPreviewActivity : BaseActivity(), View.OnClickListener {
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.imgBack -> { finish() }
+        }
+    }
 
     companion object {
         fun start(activity: Activity, track: TrekTrack){
@@ -29,6 +36,8 @@ class TrackPreviewActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_track_preview)
+        imgBack.setOnClickListener(this)
+        tvTitle.text = getString(R.string.preview)
         track = intent.getSerializableExtra("track") as TrekTrack?
         mapView?.onCreate(savedInstanceState)
         amap = mapView?.map
@@ -50,7 +59,7 @@ class TrackPreviewActivity : BaseActivity() {
         amap?.setOnMapLoadedListener {
             overlay = MyOverlay(latLngs)
             overlay?.updateOverlay(amap!!)
-            amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(overlay!!.latLngs[0], 19f))
+            amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(overlay!!.latLngs[0], 16f))
         }
 
     }
