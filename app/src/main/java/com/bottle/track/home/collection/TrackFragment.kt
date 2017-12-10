@@ -11,10 +11,9 @@ import com.bottle.track.MyApplication
 import com.bottle.track.R
 import com.bottle.track.db.gen.TrekTrackDao
 import com.bottle.track.db.schema.TrekTrack
+import com.bottle.track.map.business.TrackEditorActivity
+import com.bottle.track.map.business.TrackPreviewActivity
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
-import jp.wasabeef.recyclerview.animators.FlipInBottomXAnimator
-import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator
 import kotlinx.android.synthetic.main.fragment_track.*
 
 /**
@@ -25,8 +24,12 @@ import kotlinx.android.synthetic.main.fragment_track.*
  */
 class TrackFragment: BaseFragment(), OnItemClickListener {
 
+    override fun onEditClick(view: View?, position: Int) {
+        TrackEditorActivity.start(activity, tracks!![position])
+    }
+
     override fun onItemClick(view: View?, position: Int) {
-        showToast(tracks!![position].description)
+         TrackPreviewActivity.start(activity, tracks!![position])
     }
 
     var tracks: List<TrekTrack>? = null

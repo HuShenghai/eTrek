@@ -8,6 +8,7 @@ import com.bottle.track.db.schema.TrekTrack
 import android.view.LayoutInflater
 import android.widget.AdapterView
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.bottle.track.R
 
@@ -31,8 +32,9 @@ class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickL
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        holder?.itemView?.tag = position
         if(holder is ItemViewHolder){
+            holder?.llContent?.tag = position
+            holder?.imgMore?.tag = position
             val track = tracks[position]
             holder.initItem(track)
         }
@@ -40,7 +42,8 @@ class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickL
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         var view = layoutInflater.inflate(R.layout.item_track, parent, false)
-        view.setOnClickListener(this)
+        view.findViewById<LinearLayout>(R.id.llContent).setOnClickListener(this)
+        view.findViewById<ImageView>(R.id.imgMore).setOnClickListener(this)
         return ItemViewHolder(view)
     }
 
@@ -49,7 +52,11 @@ class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickL
     }
 
     override fun onClick(v: View?) {
-        onItemClickListener?.onItemClick(v, v?.tag as Int)
+        when(v?.id){
+            R.id.llContent -> {onItemClickListener?.onItemClick(v, v?.tag as Int)}
+            R.id.imgMore -> {onItemClickListener?.onEditClick(v, v?.tag as Int)}
+        }
+
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener){
@@ -59,16 +66,21 @@ class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickL
 
 interface OnItemClickListener{
     fun onItemClick(view: View?, position: Int)
+    fun onEditClick(view: View?, position: Int)
 }
 
 class ItemViewHolder: RecyclerView.ViewHolder{
 
-    private val imgTrackType: ImageView
-    private val tvTrackDescription: TextView
+    val llContent: LinearLayout
+    val imgMore: ImageView
+    val imgTrackType: ImageView
+    val tvTrackDescription: TextView
 
     constructor(view: View): super(view){
+        llContent = view.findViewById(R.id.llContent)
         imgTrackType = view.findViewById(R.id.imgTrackType)
         tvTrackDescription = view.findViewById(R.id.tvTrackDescription)
+        imgMore = view.findViewById(R.id.imgMore)
     }
 
     fun initItem(track: TrekTrack){

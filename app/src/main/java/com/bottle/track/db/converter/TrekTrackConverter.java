@@ -2,9 +2,11 @@ package com.bottle.track.db.converter;
 
 import com.bottle.track.map.model.Track;
 import com.bottle.util.GsonHelper;
+import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.greendao.converter.PropertyConverter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
@@ -17,7 +19,9 @@ public class TrekTrackConverter implements PropertyConverter<ArrayList<Track>, S
 
     @Override
     public ArrayList<Track> convertToEntityProperty(String databaseValue) {
-        return GsonHelper.Companion.getGsonHelper().toAny(databaseValue, new ArrayList<Track>().getClass());
+        Type type = new TypeToken<ArrayList<Track>>(){}.getType();
+        Object obj = GsonHelper.Companion.getGsonHelper().toObject(databaseValue, type);
+        return (ArrayList<Track>) obj;
     }
 
     @Override

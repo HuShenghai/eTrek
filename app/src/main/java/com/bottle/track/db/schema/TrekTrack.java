@@ -8,6 +8,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.greenrobot.greendao.annotation.Generated;
@@ -19,7 +20,9 @@ import org.greenrobot.greendao.annotation.Generated;
  * @Description eTrek 本地轨迹数据表
  */
 @Entity(indexes = {@Index(value = "beginTime DESC", unique = true)})
-public class TrekTrack {
+public class TrekTrack implements Serializable{
+
+    public static final long serialVersionUID = 1l;
 
     @Id(autoincrement = true)
     private Long id; // 目前是必须的（see http://greenrobot.org/greendao/documentation/modelling-entities/）
@@ -32,6 +35,7 @@ public class TrekTrack {
     private long beginTime;           // 起始时间
     private long endTime;             // 结束时间
     private String description;        // 描述
+
     @Generated(hash = 710943902)
     public TrekTrack(Long id, ArrayList<Track> tracks, double distance, int time, int speed,
             long beginTime, long endTime, String description) {
@@ -44,6 +48,7 @@ public class TrekTrack {
         this.endTime = endTime;
         this.description = description;
     }
+
     @Generated(hash = 1236525096)
     public TrekTrack() {
     }

@@ -1,5 +1,6 @@
 package com.bottle.track.map.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import io.reactivex.annotations.NonNull;
  * @Version 1.0.0
  * @Description Trek几何模型中的线，一条线有有序的坐标点相连组成
  */
-public class Polyline {
+public class Polyline implements Serializable{
 
     private GeoPoint startPoint; // 起点
     private GeoPoint endPoint;   // 终点

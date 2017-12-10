@@ -21,6 +21,7 @@ import com.bottle.track.api.request.UploadPoi
 import com.bottle.track.db.gen.TrekPoiDao
 import com.bottle.track.db.schema.TrekTrack
 import com.bottle.track.map.MyOverlay
+import com.bottle.track.map.business.TrackEditorActivity
 import com.bottle.track.map.model.TrekPoi
 import com.bottle.track.service.Command
 import com.bottle.track.service.TrekService

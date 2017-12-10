@@ -12,29 +12,33 @@ open class BaseActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         MyApplication.app.onActivityCreate(this)
+        Logger.d("onCreate")
     }
 
     override fun onResume(){
         super.onResume()
         MyApplication.app.onActivityResume(this)
+        Logger.d("onResume")
     }
 
     override fun onPause(){
         super.onPause()
         MyApplication.app.onActivityPause(this)
+        Logger.d("onPause")
     }
 
     override fun onDestroy(){
         super.onDestroy()
         MyApplication.app.onActivityDestroy(this)
+        Logger.d("onDestroy")
     }
 
     open fun onNetworkConnected(networkType: NetworkType){
-        Logger.d("onConnected")
+        Logger.d("onNetworkConnected")
     }
 
     open fun onNetworkDisconnected(){
-        Logger.d("onDisconnected")
+        Logger.d("onNetworkDisconnected")
     }
 
     fun showTips(view: View, tips: String) {

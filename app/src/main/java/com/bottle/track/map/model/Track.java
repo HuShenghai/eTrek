@@ -1,8 +1,7 @@
 package com.bottle.track.map.model;
 
-import java.lang.reflect.Array;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 
@@ -12,7 +11,7 @@ import io.reactivex.annotations.NonNull;
  * @Version 1.0.0
  * @Description
  */
-public class Track extends Polyline{
+public class Track extends Polyline implements Serializable{
 
     private long beginTime;     // 起始时间
     private long endTime;       // 结束时间
