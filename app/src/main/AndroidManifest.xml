@@ -58,7 +58,8 @@
         <activity android:name=".ui.coordinatorlayout.CollapsingToolbarLayoutActivity" />
         <activity android:name=".user.LoginActivity" />
         <activity android:name=".map.business.TrackPreviewActivity" />
-        <activity android:name=".map.business.TrackEditorActivity"></activity>
+        <activity android:name=".map.business.TrackEditorActivity" />
+        <activity android:name=".home.search.PoiSearchActivity"></activity>
     </application>
 
 </manifest>

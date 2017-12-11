@@ -1,6 +1,7 @@
 package com.bottle.track
 
 import com.amap.api.maps.model.LatLng
+import com.bottle.track.db.schema.TrekUser
 
 /**
  * @Date 2017/12/6 14:08
@@ -11,5 +12,7 @@ import com.amap.api.maps.model.LatLng
 class Cache {
 
     val track: ArrayList<LatLng> = arrayListOf()
+    var trekUser: TrekUser? = null
+
 
 }

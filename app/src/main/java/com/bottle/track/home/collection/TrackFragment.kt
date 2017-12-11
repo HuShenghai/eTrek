@@ -1,7 +1,6 @@
 package com.bottle.track.home.collection
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -9,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bottle.track.*
-import com.bottle.track.db.gen.TrekTrackDao
 import com.bottle.track.db.schema.TrekTrack
 import com.bottle.track.map.business.TrackEditorActivity
 import com.bottle.track.map.business.TrackPreviewActivity
@@ -69,7 +67,6 @@ class TrackFragment: BaseFragment(), OnItemClickListener, SwipeRefreshLayout.OnR
         animaAdatper.setDuration(700)
         animaAdatper.setFirstOnly(false)
         recyclerView.adapter = animaAdatper
-
         swipeRefreshLayout.setOnRefreshListener(this)
     }
 

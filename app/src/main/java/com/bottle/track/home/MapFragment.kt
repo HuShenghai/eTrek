@@ -20,6 +20,7 @@ import com.bottle.track.api.convertToRequestBean
 import com.bottle.track.api.request.UploadPoi
 import com.bottle.track.db.gen.TrekPoiDao
 import com.bottle.track.db.schema.TrekTrack
+import com.bottle.track.home.search.PoiSearchActivity
 import com.bottle.track.map.MyOverlay
 import com.bottle.track.map.business.TrackEditorActivity
 import com.bottle.track.map.model.TrackType
@@ -33,8 +34,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class MapFragment : BaseFragment(), SearchView.OnCloseListener,
-        View.OnClickListener, SearchView.OnQueryTextListener {
+class MapFragment : BaseFragment(),  View.OnClickListener {
 
     private var mParam1: String? = null
     private var mParam2: String? = null
@@ -69,12 +69,10 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener,
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        searchView.setOnCloseListener(this)
-        searchView.setOnSearchClickListener(this)
-        searchView.setOnQueryTextListener(this)
         imgMyLocation.setOnClickListener(this)
         imgLayers.setOnClickListener(this)
         imgTrack.setOnClickListener(this)
+        imgAddLocation.setOnClickListener(this)
     }
 
     override fun onResume() {
@@ -106,7 +104,7 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener,
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER)
         myLocationStyle.interval(5000)
         amap?.myLocationStyle = myLocationStyle
-        amap?.uiSettings?.isZoomControlsEnabled = true
+        amap?.uiSettings?.isZoomControlsEnabled = false
         overlay = MyOverlay(MyApplication.app.cache.track)
         return view
     }
@@ -115,17 +113,9 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener,
 
     }
 
-    ////////////// SearchView //////////////////////
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        return false
-    }
-
-    override fun onQueryTextChange(newText: String?): Boolean {
-        return false
-    }
-
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.imgAddLocation -> { PoiSearchActivity.start(activity, 100)}
             R.id.imgMyLocation -> {
                 if (center != null)
                     amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 19f))
@@ -146,10 +136,6 @@ class MapFragment : BaseFragment(), SearchView.OnCloseListener,
                 }
             }
         }
-    }
-
-    override fun onClose(): Boolean {
-        return false
     }
 
     private var isFirstLocation: Boolean = true // 第一次定位
