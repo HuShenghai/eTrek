@@ -1,4 +1,4 @@
-package com.bottle.track.home.search
+package com.bottle.track.map.poi
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.amap.api.services.core.PoiItem
 import com.bottle.track.R
+import com.bottle.track.home.OnRecyclerViewItemClickListener
 
 /**
  * @ClassName PoiAdapter
@@ -17,11 +18,12 @@ import com.bottle.track.R
  * @Date 2017/12/11
  * @Description
  */
-class PoiAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class PoiAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickListener {
 
     private val context: Context
     private val pois: List<PoiItem>
     private val layoutInflater: LayoutInflater
+    var onItemClickListener: OnRecyclerViewItemClickListener? = null
 
     constructor(context: Context, pois: ArrayList<PoiItem>){
         this.context = context
@@ -40,7 +42,14 @@ class PoiAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         var view = layoutInflater.inflate(R.layout.item_poi, parent, false)
+        view.findViewById<LinearLayout>(R.id.llContent).setOnClickListener(this)
         return ItemViewHolder(view)
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.llContent -> {onItemClickListener?.onItemClick(v, v.tag as Int)}
+        }
     }
 
     override fun getItemCount(): Int {
@@ -63,6 +72,6 @@ class ItemViewHolder: RecyclerView.ViewHolder{
     }
 
     fun initItem(track: PoiItem){
-        tvPoiDescription.text = track.adName + track.businessArea
+        tvPoiDescription.text = track.businessArea + track.title + track.adName
     }
 }

@@ -9,8 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.bottle.track.*
 import com.bottle.track.db.schema.TrekTrack
-import com.bottle.track.map.business.TrackEditorActivity
-import com.bottle.track.map.business.TrackPreviewActivity
+import com.bottle.track.home.OnRecyclerViewItemClickListener
+import com.bottle.track.map.track.TrackEditorActivity
+import com.bottle.track.map.track.TrackPreviewActivity
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import kotlinx.android.synthetic.main.fragment_track.*
 import org.greenrobot.eventbus.EventBus
@@ -23,7 +24,10 @@ import org.greenrobot.eventbus.ThreadMode
  * @Date 2017/11/25
  * @Description
  */
-class TrackFragment: BaseFragment(), OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+class TrackFragment: BaseFragment(),
+        OnRecyclerViewItemClickListener,
+        OnTrackItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     private final val REQUEST_EDIT = 0x13
 
@@ -61,7 +65,8 @@ class TrackFragment: BaseFragment(), OnItemClickListener, SwipeRefreshLayout.OnR
 
     private fun initView(){
         adapter = TrackAdapter(context, tracks)
-        adapter?.setOnItemClickListener(this)
+        adapter?.onItemClickListener = this
+        adapter?.onTrackClickListener = this
         recyclerView.layoutManager = LinearLayoutManager(activity)
         var animaAdatper = ScaleInAnimationAdapter(adapter)
         animaAdatper.setDuration(700)

@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bottle.track.R
+import com.bottle.track.home.OnRecyclerViewItemClickListener
 
 /**
  * @Date 2017/12/8 16:45
@@ -22,7 +23,8 @@ class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickL
     private val context: Context
     private val tracks: List<TrekTrack>
     private val layoutInflater: LayoutInflater
-    private var onItemClickListener: OnItemClickListener? = null
+    var onItemClickListener: OnRecyclerViewItemClickListener? = null
+    var onTrackClickListener: OnTrackItemClickListener? = null
 
     constructor(context: Context, tracks: List<TrekTrack>){
         this.context = context
@@ -53,18 +55,14 @@ class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickL
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.llContent -> {onItemClickListener?.onItemClick(v, v?.tag as Int)}
-            R.id.imgMore -> {onItemClickListener?.onEditClick(v, v?.tag as Int)}
+            R.id.imgMore -> {onTrackClickListener?.onEditClick(v, v?.tag as Int)}
         }
 
     }
 
-    fun setOnItemClickListener(listener: OnItemClickListener){
-        this.onItemClickListener = listener
-    }
 }
 
-interface OnItemClickListener{
-    fun onItemClick(view: View?, position: Int)
+interface OnTrackItemClickListener{
     fun onEditClick(view: View?, position: Int)
 }
 

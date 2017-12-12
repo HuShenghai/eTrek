@@ -36,20 +36,11 @@ class TrackManager {
     fun startLocation() {
         trekLocation = TrekLocation(object : TrekLocation.IOnReceiveLocation {
             override fun onReceiveLocation(location: AMapLocation) {
-                if (!BuildConfig.DEBUG) {
-                    var accuracy = location?.accuracy
-                    if (accuracy == null) {
-                        accuracy = Float.MAX_VALUE
-                    }
-                    if (20.0f < accuracy) {
-                        return
-                    }
-                }
+                EventBus.getDefault().post(TrekEvent(
+                        TrekEvent.TYPE_RECEIVE_LOCATION, "接收到定位", location))
                 if (tracking) {
                     recordLocation(location) // 记录轨迹
                 }
-                EventBus.getDefault().post(TrekEvent(
-                        TrekEvent.TYPE_RECEIVE_LOCATION, "接收到定位", location))
             }
         })
         trekLocation?.start()
@@ -96,6 +87,13 @@ class TrackManager {
      * 收到定位信息，在这里判断这个点是否需要加入到轨迹中 1.精度要求；2.与上一个点的时间与距离等
      */
     fun recordLocation(location: AMapLocation) {
+        var accuracy = location?.accuracy
+        if (accuracy == null) {
+            accuracy = Float.MAX_VALUE
+        }
+        if (40.0f < accuracy) {
+            return // 误差超过50米的不记录
+        }
         val position = LatLng(location.latitude, location.longitude)
         MyApplication.app.cache.track.add(position)
         geoPoints.add(GeoPoint(location.longitude, location.latitude, location.altitude))

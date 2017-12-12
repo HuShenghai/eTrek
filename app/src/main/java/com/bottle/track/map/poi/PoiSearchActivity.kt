@@ -1,4 +1,4 @@
-package com.bottle.track.home.search
+package com.bottle.track.map.poi
 
 import android.app.Activity
 import android.content.Intent
@@ -13,11 +13,16 @@ import com.bottle.track.R
 import kotlinx.android.synthetic.main.activity_poi_search.*
 import com.amap.api.services.poisearch.PoiSearch
 import com.bottle.track.BaseActivity
+import com.bottle.track.home.OnRecyclerViewItemClickListener
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import java.util.ArrayList
 
 
-class PoiSearchActivity : BaseActivity(), View.OnClickListener, SearchView.OnQueryTextListener, PoiSearch.OnPoiSearchListener {
+class PoiSearchActivity : BaseActivity(),
+        View.OnClickListener,
+        SearchView.OnQueryTextListener,
+        PoiSearch.OnPoiSearchListener,
+        OnRecyclerViewItemClickListener {
 
     companion object {
         fun start(activity: Activity, requestCode: Int){
@@ -39,8 +44,11 @@ class PoiSearchActivity : BaseActivity(), View.OnClickListener, SearchView.OnQue
         imgBack.setOnClickListener(this)
         tvSearch.setOnClickListener(this)
         searchView.setOnQueryTextListener(this)
+        searchView.isSubmitButtonEnabled = true
+        searchView.requestFocusFromTouch()
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = PoiAdapter(this, pois)
+        adapter?.onItemClickListener = this
         var animaAdatper = ScaleInAnimationAdapter(adapter)
         animaAdatper.setDuration(700)
         animaAdatper.setFirstOnly(false)
@@ -51,16 +59,30 @@ class PoiSearchActivity : BaseActivity(), View.OnClickListener, SearchView.OnQue
         when(v?.id){
             R.id.imgBack -> { finish() }
             R.id.tvSearch -> {
+
             }
         }
     }
 
+    override fun onItemClick(view: View?, position: Int) {
+        PoiPreviewActivity.start(this, pois[position])
+        // showTips(recyclerView, pois[position].cityName + pois[position].adName + pois[position].title)
+    }
+
     override fun onQueryTextSubmit(query: String?): Boolean {
+        if(TextUtils.isEmpty(query)){
+            pois.clear()
+            adapter?.notifyDataSetChanged()
+            return false
+        }
+        searchPOIAsyn("010", query!!, pageSize, 1)
         return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
         if(TextUtils.isEmpty(newText)){
+            pois.clear()
+            adapter?.notifyDataSetChanged()
             return false
         }
         searchPOIAsyn("010", newText!!, pageSize, 1)
@@ -68,6 +90,7 @@ class PoiSearchActivity : BaseActivity(), View.OnClickListener, SearchView.OnQue
     }
 
     private val pageSize = 35
+
     private fun searchPOIAsyn(cityCode: String, keyWord: String, pageSize: Int, pageNumer: Int){
         val query = PoiSearch.Query(keyWord, "", cityCode)
         query.pageSize = pageSize

@@ -1,4 +1,4 @@
-package com.bottle.track.map.business
+package com.bottle.track.map.track
 
 import android.app.Activity
 import android.content.Intent
@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_track_preview.*
 import kotlinx.android.synthetic.main.title_layout.*
 
 class TrackPreviewActivity : BaseActivity(), View.OnClickListener {
+
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.imgBack -> { finish() }

@@ -50,7 +50,7 @@ android {
         }
 
         debug {
-            signingConfig signingConfigs.key_debug
+            signingConfig signingConfigs.key_release
             minifyEnabled false
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
