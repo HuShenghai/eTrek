@@ -64,7 +64,7 @@ public class LocalUserInfo implements Parcelable {
 
     public int getUid() { return uid; }
 
-    public void setUid(int gender) { this.uid = uid; }
+    public void setUid(int uid) { this.uid = uid; }
 
     public Long getExpires() {
         return expires;

@@ -4,11 +4,13 @@ package com.bottle.track.user;
  * Created by Administrator on 2017/12/2 0002.
  */
 
-public class Config {
+public class Constants {
 
+     //--------------CONFIG-------------------
      //QQ登录的APP_ID
-     public static final String QQ_LOGIN_APP_ID = "1106494457";
+     public static final String QQ_LOGIN_APP_ID = "1106600676";
 
      //QQ登录时的权限设置, 有“get_user_info,add_t”，"all"等
      public static final String QQ_SCOPE = "all";
+
 }

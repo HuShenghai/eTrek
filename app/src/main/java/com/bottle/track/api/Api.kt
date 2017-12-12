@@ -1,6 +1,7 @@
 package com.bottle.track.api
 
 import com.bottle.track.BuildConfig
+import com.bottle.track.user.rxapi.IdeaApiService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -23,6 +24,8 @@ class Api {
     private val okHttpClient: OkHttpClient
     private val retrofit: Retrofit
     val httpService: HttpService
+
+    val httpServiceUser: IdeaApiService
 
     constructor() {
         val builder = OkHttpClient.Builder()
@@ -48,6 +51,8 @@ class Api {
                 .baseUrl(baseUrl)
                 .build()
         httpService = retrofit.create(HttpService::class.java)
+
+        httpServiceUser = retrofit.create(IdeaApiService::class.java)
     }
 
     companion object {

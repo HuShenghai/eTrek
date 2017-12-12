@@ -6,37 +6,24 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bottle.track.BaseActivity;
 import com.bottle.track.R;
 import com.bottle.track.api.Api;
-import com.bottle.track.api.BaseRequestBean;
-import com.bottle.track.api.BaseResponseBean;
-import com.bottle.track.api.HttpService;
-import com.bottle.track.api.request.LoginUser;
-import com.bottle.track.api.result.InitLoginResult;
-import com.bottle.track.api.result.LoginResult;
-import com.bottle.track.db.schema.TrekUser;
+import com.bottle.track.user.request.QQUserInfo;
+import com.bottle.track.user.rxapi.IdeaApiService;
 import com.orhanobut.logger.Logger;
 import com.tencent.connect.UserInfo;
-import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -48,8 +35,6 @@ public class LoginActivity extends BaseActivity {
 
     private Tencent mTencent;
     private LoginListener loginListener;
-    private boolean isGetQQUserInfo;
-    private boolean isGetLocalUserInfo;
     //QQ用户信息
     private String qqToken, qqOpenid, qqNickname, qqExpires, qqAvatar_url, qqUnionid;
     private int qqGender;//0-未知，1-男，2-女
@@ -60,6 +45,7 @@ public class LoginActivity extends BaseActivity {
 
     private final String TAG = this.getClass().getSimpleName();
     public static final String PAR_KRY = "LoginActivity";
+
 
     public static void start(BaseActivity context, int requestCode) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -75,10 +61,14 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         permission();
         qqLogin();
-        if (isGetQQUserInfo)
-            connectLocal();
-        if (isGetLocalUserInfo)
-            handleLocalUserInfo();
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     //退出登录
@@ -99,31 +89,35 @@ public class LoginActivity extends BaseActivity {
     //QQ登录, 校验登陆态
     public void qqLogin() {
         loginListener = new LoginListener();
-        mTencent = Tencent.createInstance(Config.QQ_LOGIN_APP_ID, this.getApplicationContext());
+        mTencent = Tencent.createInstance(Constants.QQ_LOGIN_APP_ID, this.getApplicationContext());
         if (!mTencent.isSessionValid()) {
-            mTencent.login(this, Config.QQ_SCOPE, loginListener);
+            mTencent.login(this, Constants.QQ_SCOPE, loginListener);
         }
     }
 
+    private QQUserInfo qqUserInfo = new QQUserInfo();
     //实现回调,OpenAPI V3.0。
     class LoginListener implements IUiListener {
         @Override
         public void onComplete(Object response) {
-            Logger.i(TAG, "授权成功" + response.toString());
+
+            Logger.d(TAG, "授权成功" + response.toString());
             try {
                 JSONObject jsonObject = (JSONObject) response;
-                qqToken = jsonObject.getString(Constants.PARAM_ACCESS_TOKEN);
-                qqExpires = jsonObject.getString(Constants.PARAM_EXPIRES_IN);
-                qqOpenid = jsonObject.getString(Constants.PARAM_OPEN_ID);
+                qqToken = jsonObject.getString(com.tencent.connect.common.Constants.PARAM_ACCESS_TOKEN);
+                qqExpires = jsonObject.getString(com.tencent.connect.common.Constants.PARAM_EXPIRES_IN);
+                qqOpenid = jsonObject.getString(com.tencent.connect.common.Constants.PARAM_OPEN_ID);
                 if (!TextUtils.isEmpty(qqToken) && !TextUtils.isEmpty(qqExpires)
                         && !TextUtils.isEmpty(qqOpenid)) {
                     //若要设置自定义的token过期时间，在这里设置本地用户返回的expires即可。
                     mTencent.setAccessToken(qqToken, qqExpires);
                     mTencent.setOpenId(qqOpenid);
-                    getQQUnionid();
+                    qqUserInfo.setToken(qqToken);
+                    qqUserInfo.setOpenid(qqOpenid);
                     getUserInfo();
                 }
             } catch (Exception e) {
+                //这里还要做网络异常处理
                 e.printStackTrace();
                 Logger.e(TAG, e.getMessage());
             }
@@ -131,6 +125,7 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onError(UiError uiError) {
+            //这里要做错误情况处理
             Logger.e(TAG, "登录失败" + uiError.toString());
             setResult(RESULT_CANCELED);
             finish();
@@ -138,6 +133,7 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onCancel() {
+            //例如登录过程中，按了返回键。
             Toast.makeText(LoginActivity.this, "QQ登录取消", Toast.LENGTH_LONG).show();
             setResult(RESULT_CANCELED);
             finish();
@@ -151,7 +147,8 @@ public class LoginActivity extends BaseActivity {
             userInfo.getUserInfo(new IUiListener() {
                 @Override
                 public void onComplete(final Object response) {
-                    System.out.print("登录成功，返回用户信息：" + response.toString());
+                    Log.d(TAG, "登录成功：" + Thread.currentThread().getName().toString());
+                    Toast.makeText(LoginActivity.this, "登录成功" + response.toString(), Toast.LENGTH_LONG).show();
                     JSONObject jsonObject = (JSONObject) response;
                     if (((JSONObject) response).has("nickname")) {
                         try {
@@ -168,7 +165,10 @@ public class LoginActivity extends BaseActivity {
                                 qqGender = 0;
                             }
 
-                            isGetQQUserInfo = true;
+                            qqUserInfo.setNickname(qqNickname);
+                            qqUserInfo.setGender(qqGender);
+                            qqUserInfo.setFigureurl(qqAvatar_url);
+                            getQQUnionid();
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -196,33 +196,13 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    //返回本地服务器返回的用户信息给调用者
-    public void handleLocalUserInfo() {
-        LocalUserInfo localUserInfo = new LocalUserInfo();
-        localUserInfo.setLoginToken(loginToken);
-        localUserInfo.setExpires(expires);
-        localUserInfo.setUnionid(unionid);
-        localUserInfo.setOpenid(openid);
-        localUserInfo.setNickname(nickname);
-        localUserInfo.setGender(gender);
-        localUserInfo.setAvatarUrl(avatar_url);
-        localUserInfo.setThirdType(thirdType);
-        localUserInfo.setUid(uid);
-        Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(PAR_KRY, localUserInfo);
-        intent.putExtras(bundle);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
     /**
      * 获取QQ的unionid
      */
     private void getQQUnionid() {
         //这种方法不确定能不能获取unoinid，但只要程序运行到这里，就给unionid设一个假数据NULL用于后面与本地服务器的测试
         qqUnionid = "NULL";
-        final String unionidUrl = "https://graph.qq.com/oauth2.0/me?access_token=" + qqToken + "&unionid=1";
+     /*   final String unionidUrl = "https://graph.qq.com/oauth2.0/me?access_token=" + qqToken + "&unionid=1";
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -256,94 +236,103 @@ public class LoginActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        }).start();*/
+        qqUserInfo.setUnionid(unionid);
+       // mTencent.logout(this);
+        connectLocal();
+
+
     }
 
-    private Long lastTime;
-    private HttpService httpService = new Api().getHttpService();
+    private IdeaApiService httpService = new Api().getHttpServiceUser();
 
     //与本地服务器进行二次握手连接，初始登录获取的init_token在2分钟内有效。第二次连接获取用户数据。
+    @SuppressWarnings("all")
     private void connectLocal() {
         String firstConnect = "InitLoading";
-        httpService.authInit(new BaseRequestBean(firstConnect))
+       httpService.authInit(new com.bottle.track.user.BaseRequestBean<String>(firstConnect))//
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new Observer<BaseResponseBean<InitLoginResult>>() {
+                .subscribe(new Consumer<BaseResponseBean<com.bottle.track.user.result.InitLoginResult>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        d.dispose();
-                        lastTime = System.currentTimeMillis();
-                    }
-
-                    @Override
-                    public void onNext(BaseResponseBean<InitLoginResult> b) {
-                        if (b.getRescode() != null && b.getRescode() == 1000) {
-                            System.out.print("初始连接本地状态：" + b.getInfo());
-                            initToken = b.getResult().getInit_token();
+                    public void accept(com.bottle.track.user.BaseResponseBean<com.bottle.track.user.result.InitLoginResult> b) throws Exception {
+                        Toast.makeText(getApplicationContext(), "本地取数据连接成功"
+                                + b.getRescode() + b.getInfo(), Toast.LENGTH_LONG).show();
+                        if (b.getInfo().contains("success")) {
+                            initToken = b.getResult().getInitToken();
+                            qqUserInfo.setToken(initToken);
+                            qqUserInfo.setThirdType(THIRD_TYPE);
+                            connectSecondTime();
+                            Logger.e("初次登录：" + "initToken"
+                                    + initToken + "返回码" + b.getRescode() + b.getInfo());
                         }
                     }
+                },new Consumer<Throwable>() {
+           @Override
+           public void accept(Throwable throwable) throws Exception {
 
+           }
+       });
+
+    }
+
+    public static final String THIRD_TYPE = "qq";
+
+    @SuppressWarnings("all")
+    private void connectSecondTime() {
+        httpService.login(new com.bottle.track.user.BaseRequestBean<QQUserInfo>(qqUserInfo))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<BaseResponseBean<com.bottle.track.user.result.LoginResult>>() {
                     @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        Logger.e(TAG, "初始连接本地失败");
-                        setResult(RESULT_CANCELED);
+                    public void accept(com.bottle.track.user.BaseResponseBean<com.bottle.track.user.result.LoginResult> b) throws Exception {
+                        Toast.makeText(getApplicationContext(), "本地取数据连接成功"
+                                + b.getRescode() + b.getInfo(), Toast.LENGTH_LONG).show();
+                        Logger.e(TAG, "第二次连接本地状态：" + b.getInfo());
+                        if (b.getInfo().contains("success")) {
+                            com.bottle.track.user.result.LoginResult result = b.getResult();
+                            loginToken = result.getLoginToken();
+                            expires = result.getExpireTime();
+                            com.bottle.track.user.result.UserInfo userInfo = result.getUserInfo();
+                            uid = userInfo.getUid();
+                            gender = userInfo.getGender();
+                            thirdType = userInfo.getThirdType();
+                            openid = userInfo.getOpenid();
+                            nickname = userInfo.getNickname();
+                            avatar_url = userInfo.getAvatarUrl();
+                            unionid = userInfo.getUnionid();
+
+                            //返回本地用户信息给调用者
+                            LocalUserInfo localUserInfo = new LocalUserInfo();
+                            localUserInfo.setLoginToken(loginToken);
+                            localUserInfo.setExpires(expires);
+                            localUserInfo.setUnionid(unionid);
+                            localUserInfo.setOpenid(openid);
+                            localUserInfo.setNickname(nickname);
+                            localUserInfo.setGender(gender);
+                            localUserInfo.setAvatarUrl(avatar_url);
+                            localUserInfo.setThirdType(thirdType);
+                            localUserInfo.setUid(uid);
+                            Intent intent = new Intent();
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable(PAR_KRY, localUserInfo);
+                            intent.putExtras(bundle);
+                            setResult(RESULT_OK, intent);
+                        }
                         finish();
-                    }
 
+                    }
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onComplete() {
-                        Long curTime = System.currentTimeMillis();
-                        if ((curTime - lastTime) > 0)
-                            sencondConnect();
+                    public void accept(Throwable throwable) throws Exception {
+
                     }
                 });
     }
 
-    //第二次与本地服务器握手,取得本地用户数据。
-    public static final String THIRD_TYPE = "qq";
-    private void sencondConnect() {
-        LoginUser loginUser = new LoginUser(initToken, THIRD_TYPE, qqOpenid, qqUnionid, qqNickname, qqAvatar_url, qqGender);
-        httpService.login(new BaseRequestBean(loginUser))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new Observer<BaseResponseBean<LoginResult>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        d.dispose();
-                    }
-
-                    @Override
-                    public void onNext(BaseResponseBean<LoginResult> b) {
-                        if (b.getRescode() != null && b.getRescode() == 1000) {
-                            System.out.print("连接本地服务器里状态：" + b.getResult());
-                            LoginResult result = b.getResult();
-                            loginToken = result.getLogin_token();
-                            expires = result.getExpire_time();
-                            TrekUser userInfo = result.getUser_info();
-                            uid = userInfo.getUid();
-                            gender = userInfo.getGender();
-                            thirdType = userInfo.getThrid_type();
-                            openid = userInfo.getOpenid();
-                            nickname = userInfo.getNickname();
-                            avatar_url = userInfo.getAvatar_url();
-                            unionid = userInfo.getUnionid();
-                        }
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        Logger.e(TAG, "连接本地服务器失败");
-                        setResult(RESULT_CANCELED);
-                        finish();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        isGetLocalUserInfo = true;
-                    }
-                });
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
