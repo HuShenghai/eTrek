@@ -2,20 +2,38 @@ package com.bottle.track.map.poi
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.amap.api.maps.AMap
-import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.services.core.PoiItem
 import com.bottle.track.R
-import com.bottle.track.db.schema.TrekTrack
-import kotlinx.android.synthetic.main.activity_track_preview.*
 import kotlinx.android.synthetic.main.title_layout.*
+import android.graphics.BitmapFactory
+import android.support.v4.view.ViewPager
+import android.util.Log
+import com.amap.api.maps.CameraUpdateFactory
+import com.amap.api.maps.model.*
+import com.bottle.track.BaseActivity
+import com.bottle.track.MyApplication
+import com.bottle.util.dip2px
+import kotlinx.android.synthetic.main.activity_poi_preview.*
 
-class PoiPreviewActivity : AppCompatActivity(), View.OnClickListener {
+class PoiPreviewActivity : BaseActivity(), View.OnClickListener, ViewPager.OnPageChangeListener {
+
+    override fun onPageScrollStateChanged(state: Int) {
+        Log.d("tag", "on")
+    }
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        Log.d("tag", "on")
+    }
+
+    override fun onPageSelected(position: Int) {
+        Log.d("tag", "on")
+    }
 
     private var amap: AMap? = null
+    private var adapter: PoiViewPagerAdapter? = null
 
     override fun onClick(v: View?) {
         when(v?.id){
@@ -28,6 +46,7 @@ class PoiPreviewActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_poi_preview)
         initView()
         initMap(savedInstanceState)
+        initViewPager()
     }
 
     override fun onResume() {
@@ -54,6 +73,12 @@ class PoiPreviewActivity : AppCompatActivity(), View.OnClickListener {
         myLocationStyle.interval(5000)
         amap?.myLocationStyle = myLocationStyle
         amap?.uiSettings?.isZoomControlsEnabled = true
+        amap?.setOnMapLoadedListener {
+            val poiItem = intent.getParcelableExtra<PoiItem>("poi")
+            addMark(poiItem, amap)
+            amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    LatLng(poiItem.latLonPoint.latitude, poiItem.latLonPoint.longitude), 19f))
+        }
     }
 
     private fun initView(){
@@ -61,11 +86,32 @@ class PoiPreviewActivity : AppCompatActivity(), View.OnClickListener {
         tvTitle.text = getString(R.string.preview)
     }
 
+    private fun addMark(poi: PoiItem, amap: AMap?): Marker?{
+        val markerOption = MarkerOptions()
+        markerOption.position(LatLng(poi.latLonPoint.latitude, poi.latLonPoint.longitude))
+        markerOption.title(poi.title).snippet(poi.snippet)
+
+        markerOption.draggable(true)//设置Marker可拖动
+        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                .decodeResource(resources, R.mipmap.ic_place_black_36dp)))
+        // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+        // markerOption.isFlat = true//设置marker平贴地图效果
+        return amap?.addMarker(markerOption)
+    }
+
+    private fun initViewPager() {
+        viewPager.setOnPageChangeListener(this)
+        viewPager.offscreenPageLimit = 2
+        viewPager.pageMargin = dip2px(this, 8f)
+        adapter = PoiViewPagerAdapter(this,  MyApplication.app.cache.poiSearchResult)
+        viewPager.adapter = adapter
+        adapter?.notifyDataSetChanged()
+    }
     companion object {
 
         fun start(activity: Activity, poiItem: PoiItem){
             val intent = Intent(activity, PoiPreviewActivity::class.java)
-            intent.putExtra("track", poiItem)
+            intent.putExtra("poi", poiItem)
             activity.startActivity(intent)
         }
 

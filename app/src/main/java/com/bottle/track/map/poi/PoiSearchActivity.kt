@@ -13,6 +13,7 @@ import com.bottle.track.R
 import kotlinx.android.synthetic.main.activity_poi_search.*
 import com.amap.api.services.poisearch.PoiSearch
 import com.bottle.track.BaseActivity
+import com.bottle.track.MyApplication
 import com.bottle.track.home.OnRecyclerViewItemClickListener
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import java.util.ArrayList
@@ -66,7 +67,6 @@ class PoiSearchActivity : BaseActivity(),
 
     override fun onItemClick(view: View?, position: Int) {
         PoiPreviewActivity.start(this, pois[position])
-        // showTips(recyclerView, pois[position].cityName + pois[position].adName + pois[position].title)
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -112,7 +112,8 @@ class PoiSearchActivity : BaseActivity(),
         this.pois.clear()
         this.pois.addAll(pois)
         adapter?.notifyDataSetChanged()
-        showTips(recyclerView,"size:" + pois.size)
+        MyApplication.app.cache.poiSearchResult.clear()
+        MyApplication.app.cache.poiSearchResult.addAll(pois)
     }
 
 }

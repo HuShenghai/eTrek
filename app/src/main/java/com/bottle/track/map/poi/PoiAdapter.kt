@@ -71,7 +71,7 @@ class ItemViewHolder: RecyclerView.ViewHolder{
         imgMore = view.findViewById(R.id.imgMore)
     }
 
-    fun initItem(track: PoiItem){
-        tvPoiDescription.text = track.businessArea + track.title + track.adName
+    fun initItem(poi: PoiItem){
+        tvPoiDescription.text = poi.businessArea + poi.title + poi.adName
     }
 }
