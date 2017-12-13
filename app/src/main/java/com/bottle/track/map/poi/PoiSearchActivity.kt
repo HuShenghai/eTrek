@@ -66,7 +66,7 @@ class PoiSearchActivity : BaseActivity(),
     }
 
     override fun onItemClick(view: View?, position: Int) {
-        PoiPreviewActivity.start(this, pois[position])
+        PoiPreviewActivity.start(this, pois[position], position)
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
