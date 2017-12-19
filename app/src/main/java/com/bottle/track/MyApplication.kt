@@ -16,6 +16,7 @@ import timber.log.Timber
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.DiskLogAdapter
 import com.orhanobut.logger.CsvFormatStrategy
+import com.squareup.leakcanary.LeakCanary
 
 class MyApplication : Application(), INetworkStateObserver {
 
@@ -59,6 +60,7 @@ class MyApplication : Application(), INetworkStateObserver {
         if (BuildConfig.DEBUG) {
             StrictMode.enableDefaults()
         }
+        LeakCanary.install(this)
         androidId = getAndroidId(this)
         daoSession = GreenDaoImp.getInstance(this, androidId ?: "local").daoSession
     }

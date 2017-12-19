@@ -63,6 +63,7 @@ android {
     sourceSets {
         main.java.srcDirs += 'build/generated/source/greendao'
     }
+
 }
 
 greendao {
@@ -77,6 +78,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    debugCompile thirdParty.debugLeakCanary
+    releaseCompile thirdParty.releaseLeakCanary
     testCompile thirdParty.junit
     compile supportLibrary.supportAppcompatV7
     compile supportLibrary.design
