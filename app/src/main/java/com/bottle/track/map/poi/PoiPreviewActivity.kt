@@ -42,7 +42,7 @@ class PoiPreviewActivity : BaseActivity(), View.OnClickListener, ViewPager.OnPag
 //        poi.photos
 //        poi.postcode
 
-        showTips(viewPager, "添加收藏：" + poi.poiId)
+        showTips("添加收藏：" + poi.poiId)
     }
 
     override fun onPageScrollStateChanged(state: Int) {

@@ -38,6 +38,7 @@ class Api {
         //错误重连
         builder.retryOnConnectionFailure(true)
         builder.addInterceptor(RequestParamsInterceptor()) // 添加公共参数
+        builder.hostnameVerifier { hostname, session -> true }
         okHttpClient = builder.build()
 
         gson = GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").serializeNulls().create()

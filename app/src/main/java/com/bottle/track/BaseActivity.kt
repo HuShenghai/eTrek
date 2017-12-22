@@ -45,4 +45,9 @@ open class BaseActivity: AppCompatActivity() {
         Snackbar.make(view, tips, Snackbar.LENGTH_SHORT).show()
     }
 
+
+    fun showTips(tips: String) {
+        Snackbar.make(findViewById(android.R.id.content), tips, Snackbar.LENGTH_SHORT).show()
+    }
+
 }

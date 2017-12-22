@@ -30,6 +30,7 @@
 
         <activity
             android:name=".home.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,8 +60,10 @@
         <activity android:name=".user.LoginActivity" />
         <activity android:name=".map.track.TrackPreviewActivity" />
         <activity android:name=".map.track.TrackEditorActivity" />
-        <activity android:name=".map.poi.PoiSearchActivity" />
-        <activity android:name=".map.poi.PoiPreviewActivity"></activity>
+        <activity android:name=".map.poi.PoiSearchActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity android:name=".map.poi.PoiPreviewActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
     </application>
 
 </manifest>

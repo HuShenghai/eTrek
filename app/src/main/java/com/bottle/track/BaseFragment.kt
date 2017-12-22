@@ -8,7 +8,7 @@ import android.widget.Toast
  * @ClassName 
  * @Author half_bottle
  * @Date 
- * @Description
+ * @Description 懒加载 Fragment
  */
 abstract class BaseFragment : Fragment(){
 
@@ -35,11 +35,11 @@ abstract class BaseFragment : Fragment(){
 
     abstract fun fetchData()
 
-    fun prepareFetchData(): Boolean {
+    private fun prepareFetchData(): Boolean {
         return prepareFetchData(false)
     }
 
-    fun prepareFetchData(forceUpdate: Boolean): Boolean {
+    private fun prepareFetchData(forceUpdate: Boolean): Boolean {
         if (isVisibleToUser && isViewInitiated && (!isDataInitiated || forceUpdate)) {
             fetchData()
             isDataInitiated = true

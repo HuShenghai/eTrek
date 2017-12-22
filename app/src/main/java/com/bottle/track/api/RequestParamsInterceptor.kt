@@ -8,7 +8,7 @@ class RequestParamsInterceptor : Interceptor {
 
 //    private val VERSION: String = "version"
 //    private val PLATFORM: String = "platform"
-    private val TAG: String = "RequestParamsInterceptor"
+    private val TAG: String = "ParamsInterceptor"
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val oldRequest = chain.request()
