@@ -10,39 +10,35 @@ import com.bottle.track.R
 import kotlinx.android.synthetic.main.title_layout.*
 import android.graphics.BitmapFactory
 import android.support.v4.view.ViewPager
-import android.util.Log
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
 import com.bottle.track.BaseActivity
 import com.bottle.track.MyApplication
+import com.bottle.track.db.schema.TrekPoi
 import com.bottle.util.dip2px
 import kotlinx.android.synthetic.main.activity_poi_preview.*
 
-class PoiPreviewActivity : BaseActivity(), View.OnClickListener, ViewPager.OnPageChangeListener, PoiActionListener {
+class PoiPreviewActivity : BaseActivity(),
+        View.OnClickListener,
+        ViewPager.OnPageChangeListener,
+        PoiActionListener,
+        AMap.OnMarkerClickListener {
 
     override fun onCollection(poi: PoiItem) {
-//        poi.poiId
-//        poi.typeCode
-//        poi.provinceCode
-//        poi.provinceName
-//        poi.cityCode
-//        poi.cityName
-//        poi.businessArea
-//        poi.title
-//        poi.snippet
-//        poi.adCode
-//        poi.adName
-//        poi.direction
-//        poi.distance
-//        poi.tel
-//        poi.email
-//        poi.latLonPoint
-//        poi.enter
-//        poi.exit
-//        poi.photos
-//        poi.postcode
-
-        showTips("添加收藏：" + poi.poiId)
+        val trekPoi = TrekPoi()
+        trekPoi.longitude = poi.latLonPoint.longitude
+        trekPoi.latitude = poi.latLonPoint.latitude
+        trekPoi.altitude = 0.0
+        trekPoi.province = poi.provinceName
+        trekPoi.city = poi.cityName
+        trekPoi.district = poi.businessArea
+        trekPoi.name = poi.adName
+        trekPoi.description = poi.snippet
+        trekPoi.logtime = System.currentTimeMillis()
+        trekPoi.tags = ""
+        trekPoi.title = poi.title
+        MyApplication.app.daoSession?.trekPoiDao?.insert(trekPoi)
+        showTips(getString(R.string.add_poi))
     }
 
     override fun onPageScrollStateChanged(state: Int) {
@@ -50,13 +46,23 @@ class PoiPreviewActivity : BaseActivity(), View.OnClickListener, ViewPager.OnPag
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        val poiItem = MyApplication.app.cache.poiSearchResult[position]
-        amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                LatLng(poiItem.latLonPoint.latitude, poiItem.latLonPoint.longitude), 19f))
+
     }
 
     override fun onPageSelected(position: Int) {
-
+        val poiItem = MyApplication.app.cache.poiSearchResult[position]
+        amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                LatLng(poiItem.latLonPoint.latitude, poiItem.latLonPoint.longitude),
+                amap?.cameraPosition?.zoom ?: 19.0f))
+        currentMarker?.hideInfoWindow()
+        for(marker in marks){
+            if(poiItem.latLonPoint.latitude == marker?.position?.latitude
+                    && poiItem.latLonPoint.longitude == marker?.position?.longitude){
+                currentMarker = marker
+                currentMarker?.showInfoWindow()
+                break
+            }
+        }
     }
 
     private var amap: AMap? = null
@@ -89,6 +95,7 @@ class PoiPreviewActivity : BaseActivity(), View.OnClickListener, ViewPager.OnPag
         mapView?.onDestroy()
         super.onDestroy()
     }
+
     private fun initMap(savedInstanceState: Bundle?) {
         mapView?.onCreate(savedInstanceState)
         amap = mapView?.map
@@ -108,6 +115,22 @@ class PoiPreviewActivity : BaseActivity(), View.OnClickListener, ViewPager.OnPag
             }
             initViewPager()
         }
+        amap?.setOnMarkerClickListener(this)
+    }
+
+    override fun onMarkerClick(p0: Marker?): Boolean {
+        currentMarker = p0
+        var i = 0
+        for(poi in MyApplication.app.cache.poiSearchResult){
+            if(poi.latLonPoint.latitude == p0?.position?.latitude
+                    && poi.latLonPoint.longitude == p0?.position?.longitude){
+                viewPager.currentItem = i
+                break
+            }
+            i++
+        }
+        p0?.showInfoWindow()
+        return false
     }
 
     private fun initView(){
@@ -115,17 +138,19 @@ class PoiPreviewActivity : BaseActivity(), View.OnClickListener, ViewPager.OnPag
         tvTitle.text = getString(R.string.preview)
     }
 
+    private val marks: java.util.ArrayList<Marker> = ArrayList()
+    private var currentMarker: Marker? = null
+
     private fun addMark(poi: PoiItem, amap: AMap?): Marker?{
         val markerOption = MarkerOptions()
         markerOption.position(LatLng(poi.latLonPoint.latitude, poi.latLonPoint.longitude))
-        markerOption.title(poi.title).snippet(poi.snippet)
-
-        markerOption.draggable(true)//设置Marker可拖动
-        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                .decodeResource(resources, R.mipmap.ic_place_black_36dp)))
-        // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-        markerOption.isFlat = true//设置marker平贴地图效果
-        return amap?.addMarker(markerOption)
+                .title(String.format(getString(R.string.format_coordinate), poi.latLonPoint.latitude, poi.latLonPoint.longitude))
+                .snippet(poi.title + "\n" + poi.snippet)
+                .draggable(false)//设置Marker可拖动
+                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(resources, R.mipmap.ic_place_black_36dp)))
+        var marker = amap?.addMarker(markerOption)
+        if(marker != null) marks.add(marker)
+        return marker
     }
 
     private fun initViewPager() {

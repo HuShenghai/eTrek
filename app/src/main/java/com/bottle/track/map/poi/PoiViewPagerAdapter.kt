@@ -44,7 +44,7 @@ class PoiViewPagerAdapter: PagerAdapter, View.OnClickListener {
         imgCollect.tag = position
         imgCollect.setOnClickListener(this)
         val poi = pois[position]
-        tvPoiDescription.text = poi.businessArea + poi.title + poi.adName
+        tvPoiDescription.text = poi.title + "\n" +  poi.snippet // poi.businessArea + poi.title
         container.addView(view)
         return view
     }

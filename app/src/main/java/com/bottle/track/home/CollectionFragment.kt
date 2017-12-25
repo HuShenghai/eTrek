@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import com.bottle.track.BaseFragment
 
 import com.bottle.track.R
-import com.bottle.track.home.collection.LocationFragment
+import com.bottle.track.home.collection.PoiFragment
 import com.bottle.track.home.collection.TrackFragment
 import kotlinx.android.synthetic.main.fragment_collection.*
 
@@ -26,7 +26,7 @@ class CollectionFragment : BaseFragment(), ViewPager.OnPageChangeListener, TabLa
     private var fragmentAdapter: FragmentAdapter? = null
 
     init {
-        locationFragment = LocationFragment.newInstance("","")
+        locationFragment = PoiFragment.newInstance("","")
         trackFragment = TrackFragment.newInstance("","")
         array = arrayOf(locationFragment, trackFragment)
     }

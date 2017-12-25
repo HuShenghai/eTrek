@@ -5,6 +5,8 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.Generated;
 
+import java.io.Serializable;
+
 /**
  * @Date 2017/12/5 15:28
  * @Author halfbottle
@@ -12,7 +14,9 @@ import org.greenrobot.greendao.annotation.Generated;
  * @Description eTrek 兴趣点的本地数据表
  */
 @Entity(indexes = {@Index(value = "logtime DESC", unique = true)})
-public class TrekPoi {
+public class TrekPoi implements Serializable {
+
+    public static final long serialVersionUID = 1l;
 
     @Id(autoincrement = true)
     private Long id;// 目前是必须的（see http://greenrobot.org/greendao/documentation/modelling-entities/）

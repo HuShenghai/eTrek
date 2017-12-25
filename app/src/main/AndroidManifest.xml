@@ -60,10 +60,14 @@
         <activity android:name=".user.LoginActivity" />
         <activity android:name=".map.track.TrackPreviewActivity" />
         <activity android:name=".map.track.TrackEditorActivity" />
-        <activity android:name=".map.poi.PoiSearchActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
-        <activity android:name=".map.poi.PoiPreviewActivity"
+        <activity
+            android:name=".map.poi.PoiSearchActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".map.poi.PoiPreviewActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity android:name=".map.poi.PoiEditorActivity" />
+        <activity android:name=".map.poi.PoiPreviewActivity2"></activity>
     </application>
 
 </manifest>
