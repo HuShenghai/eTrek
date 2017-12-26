@@ -1,5 +1,6 @@
 package com.bottle.track.db
 
+import com.bottle.track.db.schema.TrekPoi
 import com.bottle.track.db.schema.TrekTrack
 
 /**
@@ -30,4 +31,17 @@ fun convertToModelClass(trekTrack: TrekTrack): com.bottle.track.map.model.TrekTr
             trekTrack.time,
             trekTrack.speed,
             trekTrack.description)
+}
+
+fun convertToModelClass(trekPoi: TrekPoi): com.bottle.track.map.model.TrekPoi{
+    val model = com.bottle.track.map.model.TrekPoi(trekPoi.longitude, trekPoi.latitude, trekPoi.altitude)
+    model.logtime = trekPoi.logtime
+    model.province = trekPoi.province
+    model.city = trekPoi.city
+    model.district = trekPoi.district
+    model.name = trekPoi.name
+    model.title = trekPoi.title
+    model.description = trekPoi.description
+    model.tags = trekPoi.tags
+    return model
 }

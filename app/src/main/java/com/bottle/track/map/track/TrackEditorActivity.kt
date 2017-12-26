@@ -25,8 +25,6 @@ import org.greenrobot.eventbus.EventBus
  */
 class TrackEditorActivity : BaseActivity(), View.OnClickListener{
 
-    private val TAG = TrackEditorActivity::class.java.simpleName
-
     companion object {
         fun start(activity: Activity, track: TrekTrack, requestCode: Int){
             val intent = Intent(activity, TrackEditorActivity::class.java)

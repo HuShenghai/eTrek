@@ -8,15 +8,80 @@ package com.bottle.track.map.model;
  */
 public class TrekPoi extends GeoPoint {
 
-    public long logtime;         // 记录时间
-    public String province;      // 省
-    public String city;          // 市
-    public String district;      // 区/县
-    public String name;          // 地名
-    public String description;   // 描述，提供给用户，作游记等
+    private long logtime;         // 记录时间
+    private String province;      // 省
+    private String city;          // 市
+    private String district;      // 区/县
+    private String name;          // 地名
+    private String title;         // 标题
+    private String description;   // 描述，提供给用户，作游记等
+    private String tags;          // 兴趣点添加标签
 
     public TrekPoi(double longitude, double latitude, double altitude) {
         super(longitude, latitude, altitude);
     }
 
+    public long getLogtime() {
+        return logtime;
+    }
+
+    public void setLogtime(long logtime) {
+        this.logtime = logtime;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
 }
