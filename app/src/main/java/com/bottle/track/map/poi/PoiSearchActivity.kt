@@ -44,6 +44,8 @@ class PoiSearchActivity : BaseActivity(),
     private fun initView(){
         imgBack.setOnClickListener(this)
         tvSearch.setOnClickListener(this)
+        llMyLocation.setOnClickListener(this)
+        llSelectFromMap.setOnClickListener(this)
         searchView.setOnQueryTextListener(this)
         searchView.isSubmitButtonEnabled = true
         searchView.requestFocusFromTouch()
@@ -62,6 +64,12 @@ class PoiSearchActivity : BaseActivity(),
             R.id.tvSearch -> {
 
             }
+            R.id.llMyLocation -> {
+                showTips("我的位置，需要反地理编码")
+            }
+            R.id.llSelectFromMap -> {
+                showTips("地图选点，需要定位当前位置，然后移动地图选择")
+            }
         }
     }
 
@@ -75,7 +83,7 @@ class PoiSearchActivity : BaseActivity(),
             adapter?.notifyDataSetChanged()
             return false
         }
-        searchPOIAsyn("010", query!!, pageSize, 1)
+        searchPOIAsyn(MyApplication.app.cache.cityCode ?: "010", query!!, pageSize, 1)
         return false
     }
 
@@ -85,7 +93,7 @@ class PoiSearchActivity : BaseActivity(),
             adapter?.notifyDataSetChanged()
             return false
         }
-        searchPOIAsyn("010", newText!!, pageSize, 1)
+        searchPOIAsyn(MyApplication.app.cache.cityCode ?: "010", newText!!, pageSize, 1)
         return false
     }
 

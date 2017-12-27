@@ -19,6 +19,8 @@
     <string name="free_stroke">自由行</string>
     <string name="coordinate">坐标</string>
     <string name="add_poi">添加收藏</string>
+    <string name="my_location">我的位置</string>
+    <string name="select_from_map">地图选点</string>
     <string name="format_coordinate">(%s,%s)</string>
 
     <string name="title_activity_collapsing_toolbar_layout">滑动测试</string>

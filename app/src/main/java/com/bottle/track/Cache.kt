@@ -15,6 +15,8 @@ class Cache {
     val track: ArrayList<LatLng> = arrayListOf()
     var trekUser: TrekUser? = null
     val poiSearchResult = java.util.ArrayList<PoiItem>()
+    var cityCode: String? = null
+    var cityName: String? = null
 
 
 }

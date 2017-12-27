@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,32 +10,100 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_actionbar_height">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <ImageView
                 android:id="@+id/imgBack"
                 android:layout_width="@dimen/app_actionbar_height"
                 android:layout_height="match_parent"
                 android:scaleType="centerInside"
-                android:src="@mipmap/ic_chevron_left_black_36dp"/>
+                android:src="@mipmap/ic_chevron_left_black_36dp" />
+
             <android.support.v7.widget.SearchView
                 android:id="@+id/searchView"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/app_input_height"
-                android:layout_weight="1"
                 android:layout_gravity="center"
-                app:queryHint="@string/search"/>
+                android:layout_weight="1"
+                app:queryHint="@string/search" />
 
             <TextView
                 android:id="@+id/tvSearch"
+                style="@style/TextView_content"
                 android:layout_width="@dimen/app_actionbar_height"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                style="@style/TextView_content"
                 android:background="@drawable/bg_rect"
+                android:gravity="center"
                 android:text="@string/search"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/llMyLocation"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/bg_rect">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_pin_drop_black_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/my_location" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/bg_press" />
+
+            <LinearLayout
+                android:id="@+id/llSelectFromMap"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:gravity="center"
+                android:background="@drawable/bg_rect">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_place_black_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/select_from_map" />
+
+            </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
