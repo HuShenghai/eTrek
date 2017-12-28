@@ -9,6 +9,8 @@ import com.orhanobut.logger.Logger
 
 open class BaseActivity: AppCompatActivity() {
 
+    protected val TAG = this.javaClass.simpleName
+
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         MyApplication.app.onActivityCreate(this)

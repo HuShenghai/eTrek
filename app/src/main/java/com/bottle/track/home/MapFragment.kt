@@ -1,6 +1,7 @@
 package com.bottle.track.home
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,10 @@ import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
+import com.amap.api.services.core.LatLonPoint
+import com.amap.api.services.geocoder.GeocodeResult
+import com.amap.api.services.geocoder.GeocodeSearch
+import com.amap.api.services.geocoder.RegeocodeResult
 import com.bottle.track.*
 import com.bottle.track.api.Api
 import com.bottle.track.api.BaseRequestBean
@@ -23,6 +28,7 @@ import com.bottle.track.map.MyOverlay
 import com.bottle.track.map.track.TrackEditorActivity
 import com.bottle.track.map.model.TrackType
 import com.bottle.track.map.model.TrekPoi
+import com.bottle.track.map.regeocode
 import com.bottle.track.service.Command
 import com.bottle.track.service.TrekService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -32,7 +38,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class MapFragment : BaseFragment(),  View.OnClickListener {
+class MapFragment : BaseFragment(),  View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener {
 
     private var mParam1: String? = null
     private var mParam2: String? = null
@@ -145,7 +151,9 @@ class MapFragment : BaseFragment(),  View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onReceiveEvent(event: TrekEvent<Any>) {
         when (event.type) {
-            TrekEvent.TYPE_RECEIVE_LOCATION -> updateTrackOverlay(event)
+            TrekEvent.TYPE_RECEIVE_LOCATION -> {
+                updateTrackOverlay(event)
+            }
             TrekEvent.TYPE_RECORD_TRACK -> {
                 TrackEditorActivity.start(activity, event.event as TrekTrack, 0)
             }
@@ -156,6 +164,7 @@ class MapFragment : BaseFragment(),  View.OnClickListener {
         if (event.event is AMapLocation) {
             val location: AMapLocation = event.event as AMapLocation
             val position = LatLng(location.latitude, location.longitude)
+            getCityCode(event)
             center = position
             if (tracking) {
                 if (overlay?.latLngs!!.size > 1) {
@@ -174,53 +183,23 @@ class MapFragment : BaseFragment(),  View.OnClickListener {
         }
     }
 
-    private fun testUploadPoints() {
-        val logtime = System.currentTimeMillis()
-        val p1 = TrekPoi(112.1, 23.0, 500.0)
-        val p2 = TrekPoi(112.1, 23.0, 500.0)
-        val p3 = TrekPoi(112.1, 23.0, 500.0)
-        p1.logtime = logtime
-        p2.logtime = logtime
-        p3.logtime = logtime
-        val points = listOf(p1, p2, p3)
-        val uploadPoints = UploadPoi(points)
-        val requestBean = BaseRequestBean(uploadPoints)
-        Api.api.httpService.uploadPoints(requestBean)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.io())
-                .doOnNext({
-                    // 这里可以进行耗时操作，如读写数据库等
-                    Log.d(TAG, "doOnNext")
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    Toast.makeText(context, response.info, Toast.LENGTH_SHORT).show()
-                    // Log.d(TAG, toJsonString(response as Object))
-
-                }, { error ->
-                    Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
-                    // Log.d(TAG, toJsonString(error as Object))
-                })
-    }
-
-    private fun testPoiDatabase() {
-        val dao: TrekPoiDao? = MyApplication.app.daoSession?.trekPoiDao
-        val poi = com.bottle.track.db.schema.TrekPoi()
-        poi.longitude = 112.43
-        poi.latitude = 23.01
-        poi.altitude = 100.0
-        poi.logtime = System.currentTimeMillis()
-        poi.city = "深圳1"
-        poi.district = "南山1"
-        poi.description = "南山智园1"
-        val effect = dao?.insert(poi)
-        Log.d(TAG, "insert:" + effect)
-        var query = dao?.queryBuilder()
-        if (query != null) {
-            var result = query.list()
-            Log.d(TAG, "query:" + result.size)
-            Log.d(TAG, "query:" + result[0].description)
-
+    private fun getCityCode(event: TrekEvent<Any>){
+        if(!TextUtils.isEmpty(MyApplication.app.cache.cityCode)){
+            return
+        }
+        if (event.event is AMapLocation) {
+            val location: AMapLocation = event.event as AMapLocation
+            val point = LatLonPoint(location.latitude, location.longitude)
+            regeocode(activity, this, 1000f, point, GeocodeSearch.AMAP)
         }
     }
+
+    override fun onRegeocodeSearched(result: RegeocodeResult?, p1: Int) {
+        MyApplication.app.cache.cityCode = result?.regeocodeAddress?.cityCode
+    }
+
+    override fun onGeocodeSearched(p0: GeocodeResult?, p1: Int) {
+
+    }
+
 }
