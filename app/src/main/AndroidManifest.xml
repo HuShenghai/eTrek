@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:name=".MyApplication"
+        android:name=".app.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -26,7 +26,7 @@
             android:value="@string/amap_app_key" />
 
         <service android:name="com.amap.api.location.APSService" />
-        <service android:name=".service.TrekService" />
+        <service android:name="com.bottle.track.app.service.TrekService" />
 
         <activity
             android:name=".home.MainActivity"
@@ -55,19 +55,19 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".ui.coordinatorlayout.AppBarLayoutActivity" />
-        <activity android:name=".ui.coordinatorlayout.CollapsingToolbarLayoutActivity" />
-        <activity android:name=".user.LoginActivity" />
-        <activity android:name=".map.track.TrackPreviewActivity" />
-        <activity android:name=".map.track.TrackEditorActivity" />
+        <activity android:name="com.bottle.track.base.ui.coordinatorlayout.AppBarLayoutActivity" />
+        <activity android:name="com.bottle.track.base.ui.coordinatorlayout.CollapsingToolbarLayoutActivity" />
+        <activity android:name=".home.user.login.LoginActivity" />
+        <activity android:name=".home.collection.trackpreview.TrackPreviewActivity" />
+        <activity android:name=".home.collection.trackedit.TrackEditorActivity" />
         <activity
-            android:name=".map.poi.PoiSearchActivity"
+            android:name=".home.search.search.PoiSearchActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
-            android:name=".map.poi.PoiPreviewActivity"
+            android:name=".home.search.preview.PoiPreviewActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".map.poi.PoiEditorActivity" />
-        <activity android:name=".map.poi.PoiPreviewActivity2"></activity>
+        <activity android:name=".home.collection.poiedit.PoiEditorActivity" />
+        <activity android:name=".home.collection.poipreview.PoiPreviewActivity2"></activity>
     </application>
 
 </manifest>

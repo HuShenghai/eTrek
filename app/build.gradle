@@ -68,7 +68,7 @@ android {
 
 greendao {
     schemaVersion 1
-    daoPackage 'com.bottle.track.db.gen'
+    daoPackage 'com.bottle.track.core.db.gen'
 }
 
 dependencies {

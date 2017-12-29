@@ -8,7 +8,7 @@ import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationClientOption.AMapLocationMode
 import com.amap.api.location.AMapLocationListener
 import com.bottle.track.BuildConfig
-import com.bottle.track.MyApplication
+import com.bottle.track.app.MyApplication
 
 class TrekLocation(private val observer: IOnReceiveLocation) {
 

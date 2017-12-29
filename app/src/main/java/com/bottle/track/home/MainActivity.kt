@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.view.MenuItem
-import com.bottle.track.BaseActivity
-import com.bottle.track.MyApplication
+import com.bottle.track.base.view.BaseActivity
+import com.bottle.track.app.MyApplication
 import com.bottle.track.R
-import com.bottle.track.service.Command
-import com.bottle.track.service.TrekService
+import com.bottle.track.home.collection.CollectionFragment
+import com.bottle.track.home.map.MapFragment
+import com.bottle.track.home.user.HomeFragment
+import com.bottle.track.app.service.Command
+import com.bottle.track.app.service.TrekService
 import com.bottle.util.hasPermission
 import com.bottle.util.requestPermission
 import kotlinx.android.synthetic.main.activity_main.*
@@ -66,6 +69,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         fLayoutContainer.postDelayed({ startService(locationIntent) }, 2000)
 
     }
+
     private fun permission(){
         val permissions = arrayListOf<String>()
         if(!hasPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)){
