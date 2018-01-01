@@ -6,17 +6,6 @@ import com.amap.api.services.geocoder.GeocodeSearch
 import com.amap.api.services.geocoder.RegeocodeQuery
 import com.amap.api.services.geocoder.GeocodeQuery
 
-
-
-
-
-/**
- * @ClassName Utils
- * @Author half_bottle
- * @Date 2017/12/27
- * @Description
- */
-
 /**
  * 地理编码
  * @param context

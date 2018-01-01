@@ -1,4 +1,4 @@
-package com.bottle.track.home.map
+package com.bottle.track.home.map.view
 
 import android.os.Bundle
 import android.text.TextUtils

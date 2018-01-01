@@ -10,7 +10,7 @@ import com.bottle.track.base.view.BaseActivity
 import com.bottle.track.app.MyApplication
 import com.bottle.track.R
 import com.bottle.track.home.collection.CollectionFragment
-import com.bottle.track.home.map.MapFragment
+import com.bottle.track.home.map.view.MapFragment
 import com.bottle.track.home.user.HomeFragment
 import com.bottle.track.app.service.Command
 import com.bottle.track.app.service.TrekService

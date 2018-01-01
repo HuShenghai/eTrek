@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_poi_editor.*
 import kotlinx.android.synthetic.main.title_layout.*
 
-class PoiEditorActivity : BaseActivity(), View.OnClickListener {
+class PoiEditorActivity : BaseActivity(), PoiEditorContract.View, View.OnClickListener {
 
     private var trekPoi: TrekPoi? = null
 
@@ -48,6 +48,10 @@ class PoiEditorActivity : BaseActivity(), View.OnClickListener {
             R.id.tvSave -> { saveTrekPoi(trekPoi!!) }
             R.id.tvDelete -> { deleteTrekPoi(trekPoi!!) }
         }
+    }
+
+    override fun setPresenter(presenter: PoiEditorContract.Presenter) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun saveTrekPoi(trekPoi: TrekPoi){
