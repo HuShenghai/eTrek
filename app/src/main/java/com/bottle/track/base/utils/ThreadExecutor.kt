@@ -22,14 +22,14 @@ class ThreadExecutor private constructor() {
     private val executorService: ExecutorService
 
     init {
-        val count = Math.min(3, (Runtime.getRuntime().availableProcessors() * 1.2 + 1).toInt())
+        val count = 3
         this.executorService = ThreadPoolExecutor(count, count, 10000,
                 TimeUnit.MILLISECONDS, LinkedBlockingQueue())
     }
 
     fun doTask(task: Runnable) {
-        if (!executorService!!.isShutdown) {
-            this.executorService!!.execute(task)
+        if (!executorService.isShutdown) {
+            this.executorService.execute(task)
         } else {
             Log.i(TAG, "ExecutorService was already shutdown!")
         }
@@ -37,12 +37,12 @@ class ThreadExecutor private constructor() {
 
     fun <T> doTask(task: Callable<T>): Future<T> {
         val future = FutureTask(task)
-        this.executorService!!.execute(future)
+        this.executorService.execute(future)
         return future
     }
 
     fun shutdown() {
-        this.executorService!!.shutdown()
+        this.executorService.shutdown()
     }
 
     companion object {
