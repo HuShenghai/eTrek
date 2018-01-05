@@ -67,7 +67,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         val locationIntent = Intent(MyApplication.app, TrekService::class.java)
         locationIntent.putExtra(TrekService.COMMAND, Command(Command.START_LOCATION, "启动定位服务", ""))
         fLayoutContainer.postDelayed({ startService(locationIntent) }, 2000)
-
     }
 
     private fun permission(){

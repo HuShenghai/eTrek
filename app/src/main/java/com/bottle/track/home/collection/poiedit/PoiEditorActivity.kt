@@ -19,6 +19,13 @@ import kotlinx.android.synthetic.main.activity_poi_editor.*
 import kotlinx.android.synthetic.main.title_layout.*
 
 class PoiEditorActivity : BaseActivity(), PoiEditorContract.View, View.OnClickListener {
+    override fun showTitle(title: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showPoiInfo(trekPoi: TrekPoi) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private var trekPoi: TrekPoi? = null
 

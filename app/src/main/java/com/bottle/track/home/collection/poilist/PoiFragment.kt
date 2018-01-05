@@ -23,7 +23,26 @@ import kotlinx.android.synthetic.main.fragment_track.*
  * @Date 2017/11/25
  * @Description
  */
-class PoiFragment : LazyLoadFragment(), OnRecyclerViewItemClickListener, OnPoiItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+class PoiFragment : LazyLoadFragment(),
+        OnRecyclerViewItemClickListener,
+        OnPoiItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener,
+        PoiListContract.View {
+
+    companion object {
+
+        private val ARG_PARAM1 = "param1"
+        private val ARG_PARAM2 = "param2"
+
+        fun newInstance(param1: String, param2: String): PoiFragment {
+            val fragment = PoiFragment()
+            val args = Bundle()
+            args.putString(ARG_PARAM1, param1)
+            args.putString(ARG_PARAM2, param2)
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     override fun onRefresh() {
         pois.clear()
@@ -53,6 +72,7 @@ class PoiFragment : LazyLoadFragment(), OnRecyclerViewItemClickListener, OnPoiIt
         recyclerView.adapter = animaAdatper
         swipeRefreshLayout.setOnRefreshListener(this)
     }
+
     private fun initData(){
         var dbPois = MyApplication.app.daoSession?.trekPoiDao?.queryBuilder()?.list()
         if(dbPois != null && dbPois.size > 0){
@@ -62,6 +82,7 @@ class PoiFragment : LazyLoadFragment(), OnRecyclerViewItemClickListener, OnPoiIt
         }
         adapter?.notifyDataSetChanged()
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -89,18 +110,14 @@ class PoiFragment : LazyLoadFragment(), OnRecyclerViewItemClickListener, OnPoiIt
 
     }
 
-    companion object {
+    override fun setPresenter(presenter: PoiListContract.Presenter) {
 
-        private val ARG_PARAM1 = "param1"
-        private val ARG_PARAM2 = "param2"
-
-        fun newInstance(param1: String, param2: String): PoiFragment {
-            val fragment = PoiFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.arguments = args
-            return fragment
-        }
     }
+
+    override fun showPoiList() {
+
+    }
+
+    var presenter: PoiListPresenter? = null
+
 }

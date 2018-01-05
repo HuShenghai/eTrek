@@ -1,6 +1,7 @@
 package com.bottle.track.home.collection.poilist
 
 import android.content.Context
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +35,7 @@ class PoiAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickLis
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         if(holder is PoiViewHolder){
-            holder?.llContent?.tag = position
+            holder?.cvContent?.tag = position
             holder?.imgMore?.tag = position
             val poi = pois[position]
             holder.initItem(poi)
@@ -43,7 +44,7 @@ class PoiAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickLis
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         var view = layoutInflater.inflate(R.layout.item_poi_2, parent, false)
-        view.findViewById<LinearLayout>(R.id.llContent).setOnClickListener(this)
+        view.findViewById<CardView>(R.id.cvContent).setOnClickListener(this)
         view.findViewById<ImageView>(R.id.imgMore).setOnClickListener(this)
         return PoiViewHolder(view)
     }
@@ -54,7 +55,7 @@ class PoiAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickLis
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.llContent -> { onItemClickListener?.onItemClick(v, v?.tag as Int) }
+            R.id.cvContent -> { onItemClickListener?.onItemClick(v, v?.tag as Int) }
             R.id.imgMore -> { onPoiClickListener?.onEditClick(v, v?.tag as Int) }
         }
     }
@@ -66,12 +67,12 @@ interface OnPoiItemClickListener{
 
 class PoiViewHolder: RecyclerView.ViewHolder{
 
-    val llContent: LinearLayout
+    val cvContent: CardView
     val imgMore: ImageView
-    val poiDescription: TextView
+    private val poiDescription: TextView
 
     constructor(view: View): super(view){
-        llContent = view.findViewById(R.id.llContent)
+        cvContent = view.findViewById(R.id.cvContent)
         poiDescription = view.findViewById(R.id.tvPoiDescription)
         imgMore = view.findViewById(R.id.imgMore)
     }

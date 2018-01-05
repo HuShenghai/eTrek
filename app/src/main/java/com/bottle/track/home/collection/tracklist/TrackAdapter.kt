@@ -1,6 +1,7 @@
 package com.bottle.track.home.collection.tracklist
 
 import android.content.Context
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +35,7 @@ class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickL
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         if(holder is ItemViewHolder){
-            holder?.llContent?.tag = position
+            holder?.cvContent?.tag = position
             holder?.imgMore?.tag = position
             val track = tracks[position]
             holder.initItem(track)
@@ -43,7 +44,7 @@ class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickL
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         var view = layoutInflater.inflate(R.layout.item_track, parent, false)
-        view.findViewById<LinearLayout>(R.id.llContent).setOnClickListener(this)
+        view.findViewById<CardView>(R.id.cvContent).setOnClickListener(this)
         view.findViewById<ImageView>(R.id.imgMore).setOnClickListener(this)
         return ItemViewHolder(view)
     }
@@ -54,7 +55,7 @@ class TrackAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, View.OnClickL
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.llContent -> {onItemClickListener?.onItemClick(v, v?.tag as Int)}
+            R.id.cvContent -> {onItemClickListener?.onItemClick(v, v?.tag as Int)}
             R.id.imgMore -> {onTrackClickListener?.onEditClick(v, v?.tag as Int)}
         }
 
@@ -68,14 +69,14 @@ interface OnTrackItemClickListener{
 
 class ItemViewHolder: RecyclerView.ViewHolder{
 
-    val llContent: LinearLayout
+    val cvContent: CardView
     val imgMore: ImageView
     val imgTrackType: ImageView
     val tvTrackDescription: TextView
     val tvTrackTitle: TextView
 
     constructor(view: View): super(view){
-        llContent = view.findViewById(R.id.llContent)
+        cvContent = view.findViewById(R.id.cvContent)
         imgTrackType = view.findViewById(R.id.imgTrackType)
         tvTrackDescription = view.findViewById(R.id.tvTrackDescription)
         imgMore = view.findViewById(R.id.imgMore)
