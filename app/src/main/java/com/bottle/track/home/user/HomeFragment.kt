@@ -1,6 +1,7 @@
 package com.bottle.track.home.user
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import com.bottle.track.base.view.BaseActivity
 import com.bottle.track.base.view.LazyLoadFragment
 import com.bottle.track.R
 import com.bottle.track.base.ui.coordinatorlayout.CollapsingToolbarLayoutActivity
+import com.bottle.track.base.view.createSimpleDialog
 import com.bottle.track.home.user.login.LoginActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -57,10 +59,27 @@ class HomeFragment : LazyLoadFragment(), View.OnClickListener {
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
-            R.id.llSetting ->{ CollapsingToolbarLayoutActivity.start(activity) }
-            R.id.llUserInfo -> { LoginActivity.start(context as BaseActivity, 100) }
-            R.id.imgUserLogo -> { showToast("要换头像吗？") }
-            R.id.llMyLocation -> { showToast("查看当前位置")}
+            R.id.llSetting -> {
+                CollapsingToolbarLayoutActivity.start(activity)
+            }
+            R.id.llUserInfo -> {
+                LoginActivity.start(context as BaseActivity, 100)
+            }
+            R.id.imgUserLogo -> {
+                createSimpleDialog(activity, question = "这个对话框点击外部不可取消",
+                        onOkClickListener = object : DialogInterface.OnClickListener {
+                            override fun onClick(dialog: DialogInterface?, which: Int) {
+                                showToast("Hello World!这是一般实现")
+                            }
+                        },
+                        canceledOnTouchOutside = false).show()
+            }
+            R.id.llMyLocation -> {
+                createSimpleDialog(activity, "点击显示: Hello World!",
+                        DialogInterface.OnClickListener { dialog, which ->
+                            showToast("Hello World!这是Lambda实现")
+                        }, false).show()
+            }
         }
     }
 

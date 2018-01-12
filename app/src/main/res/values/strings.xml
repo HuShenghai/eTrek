@@ -22,7 +22,8 @@
     <string name="my_location">我的位置</string>
     <string name="select_from_map">地图选点</string>
     <string name="format_coordinate">(%s,%s)</string>
-
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
     <string name="title_activity_collapsing_toolbar_layout">滑动测试</string>
     <string name="large_text">large text</string>
 </resources>
