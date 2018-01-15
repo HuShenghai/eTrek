@@ -37,7 +37,7 @@ class MyApplication : Application(), INetworkStateObserver {
 
     var daoSession: DaoSession? = null
 
-    val cache: Cache = Cache()
+    var cache: Cache? = null
 
     companion object {
         lateinit var app: MyApplication private set
@@ -66,6 +66,7 @@ class MyApplication : Application(), INetworkStateObserver {
         LeakCanary.install(this)
         androidId = getAndroidId(this)
         daoSession = GreenDaoImp.getInstance(this, androidId ?: "local").daoSession
+        cache = Cache(this)
     }
 
     override fun onConnected(type: NetworkType) {

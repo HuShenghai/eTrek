@@ -1,7 +1,9 @@
 package com.bottle.track.core.db
 
+import com.bottle.track.core.db.schema.TrackPoint
 import com.bottle.track.core.db.schema.TrekPoi
 import com.bottle.track.core.db.schema.TrekTrack
+import com.bottle.track.core.model.GeoPoint
 
 /**
  * @Date 2017/12/6 19:49
@@ -44,4 +46,8 @@ fun convertToModelClass(trekPoi: TrekPoi): com.bottle.track.core.model.TrekPoi{
     model.description = trekPoi.description
     model.tags = trekPoi.tags
     return model
+}
+
+fun convertToModelClass(trackPoint: TrackPoint): GeoPoint{
+    return GeoPoint(trackPoint.longitude, trackPoint.latitude, trackPoint.altitude)
 }

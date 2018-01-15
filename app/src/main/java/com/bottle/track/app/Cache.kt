@@ -1,8 +1,10 @@
 package com.bottle.track.app
 
+import android.content.Context
 import com.amap.api.maps.model.LatLng
 import com.amap.api.services.core.PoiItem
 import com.bottle.track.core.db.schema.TrekUser
+import com.bottle.util.SharePreferenceHelper
 
 /**
  * @Date 2017/12/6 14:08
@@ -17,6 +19,10 @@ class Cache {
     val poiSearchResult = java.util.ArrayList<PoiItem>()
     var cityCode: String? = null
     var cityName: String? = null
+    val setting: SharePreferenceHelper
 
+    constructor(context: Context){
+        this.setting = SharePreferenceHelper(context)
+    }
 
 }

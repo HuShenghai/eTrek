@@ -84,7 +84,7 @@ class PoiSearchActivity : BaseActivity(),
             adapter?.notifyDataSetChanged()
             return false
         }
-        searchPOIAsyn(MyApplication.app.cache.cityCode ?: "010", query!!, pageSize, 1)
+        searchPOIAsyn(MyApplication.app.cache?.cityCode ?: "010", query!!, pageSize, 1)
         return false
     }
 
@@ -94,7 +94,7 @@ class PoiSearchActivity : BaseActivity(),
             adapter?.notifyDataSetChanged()
             return false
         }
-        searchPOIAsyn(MyApplication.app.cache.cityCode ?: "010", newText!!, pageSize, 1)
+        searchPOIAsyn(MyApplication.app.cache?.cityCode ?: "010", newText!!, pageSize, 1)
         return false
     }
 
@@ -121,8 +121,8 @@ class PoiSearchActivity : BaseActivity(),
         this.pois.clear()
         this.pois.addAll(pois)
         adapter?.notifyDataSetChanged()
-        MyApplication.app.cache.poiSearchResult.clear()
-        MyApplication.app.cache.poiSearchResult.addAll(pois)
+        MyApplication.app.cache?.poiSearchResult?.clear()
+        MyApplication.app.cache?.poiSearchResult?.addAll(pois)
     }
 
 }

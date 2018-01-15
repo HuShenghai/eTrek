@@ -103,7 +103,7 @@ class MapFragment : LazyLoadFragment(),  View.OnClickListener, GeocodeSearch.OnG
         myLocationStyle.interval(5000)
         amap?.myLocationStyle = myLocationStyle
         amap?.uiSettings?.isZoomControlsEnabled = false
-        overlay = MyOverlay(MyApplication.app.cache.track)
+        overlay = MyOverlay(MyApplication.app.cache?.track!!)
         return view
     }
 
@@ -178,7 +178,7 @@ class MapFragment : LazyLoadFragment(),  View.OnClickListener, GeocodeSearch.OnG
     }
 
     private fun getCityCode(event: TrekEvent<Any>){
-        if(!TextUtils.isEmpty(MyApplication.app.cache.cityCode)){
+        if(!TextUtils.isEmpty(MyApplication.app.cache?.cityCode)){
             return
         }
         if (event.event is AMapLocation) {
@@ -189,7 +189,7 @@ class MapFragment : LazyLoadFragment(),  View.OnClickListener, GeocodeSearch.OnG
     }
 
     override fun onRegeocodeSearched(result: RegeocodeResult?, p1: Int) {
-        MyApplication.app.cache.cityCode = result?.regeocodeAddress?.cityCode
+        MyApplication.app.cache?.cityCode = result?.regeocodeAddress?.cityCode
     }
 
     override fun onGeocodeSearched(p0: GeocodeResult?, p1: Int) {

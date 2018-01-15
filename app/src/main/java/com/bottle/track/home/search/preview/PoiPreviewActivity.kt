@@ -50,7 +50,7 @@ class PoiPreviewActivity : BaseActivity(),
     }
 
     override fun onPageSelected(position: Int) {
-        val poiItem = MyApplication.app.cache.poiSearchResult[position]
+        val poiItem = MyApplication.app.cache!!.poiSearchResult[position]
         amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 LatLng(poiItem.latLonPoint.latitude, poiItem.latLonPoint.longitude),
                 amap?.cameraPosition?.zoom ?: 19.0f))
@@ -110,7 +110,7 @@ class PoiPreviewActivity : BaseActivity(),
             val poiItem = intent.getParcelableExtra<PoiItem>("poi")
             amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     LatLng(poiItem.latLonPoint.latitude, poiItem.latLonPoint.longitude), 19f))
-            for(poi in MyApplication.app.cache.poiSearchResult){
+            for(poi in MyApplication.app.cache!!.poiSearchResult){
                 addMark(poi, amap)
             }
             initViewPager()
@@ -121,7 +121,7 @@ class PoiPreviewActivity : BaseActivity(),
     override fun onMarkerClick(p0: Marker?): Boolean {
         currentMarker = p0
         var i = 0
-        for(poi in MyApplication.app.cache.poiSearchResult){
+        for(poi in MyApplication.app.cache!!.poiSearchResult){
             if(poi.latLonPoint.latitude == p0?.position?.latitude
                     && poi.latLonPoint.longitude == p0?.position?.longitude){
                 viewPager.currentItem = i
@@ -157,7 +157,7 @@ class PoiPreviewActivity : BaseActivity(),
         viewPager.setOnPageChangeListener(this)
         viewPager.offscreenPageLimit = 2
         viewPager.pageMargin = dip2px(this, 16f)
-        adapter = PoiViewPagerAdapter(this, MyApplication.app.cache.poiSearchResult)
+        adapter = PoiViewPagerAdapter(this, MyApplication.app.cache!!.poiSearchResult)
         adapter?.poiActionListener = this
         viewPager.adapter = adapter
         viewPager.currentItem = intent.getIntExtra("position", 0)
