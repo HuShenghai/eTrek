@@ -3,10 +3,12 @@ package com.bottle.track.app.service
 import android.util.Log
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.model.LatLng
+import com.bottle.track.BuildConfig
 import com.bottle.track.app.MyApplication
 import com.bottle.track.base.utils.ThreadExecutor
 import com.bottle.track.app.TrekEvent
 import com.bottle.track.core.db.convertToDbClass
+import com.bottle.track.core.db.convertToModelClass
 import com.bottle.track.core.db.schema.TrackPoint
 import com.bottle.track.map.TrekLocation
 import com.bottle.track.core.model.GeoPoint
@@ -53,32 +55,46 @@ class TrackManager {
 
     fun startTracking(command: Command<Any>) {
         var type = command.data
-        if(type is TrackType){
+        if (type is TrackType) {
             trackType = type
-        }else{
+        } else {
             trackType = TrackType.FREE_STROKE // 默认自由行
         }
         beginTrackingTime = System.currentTimeMillis()
         tracking = true
         MyApplication.app.cache?.track?.clear()
         geoPoints.clear()
+        val trackPoints = MyApplication.app.daoSession?.trackPointDao?.loadAll()
+        if (trackPoints == null) {
+            return
+        }
+        for(point in trackPoints){
+            geoPoints.add(convertToModelClass(point))
+        }
     }
 
     fun stopTracking() {
         tracking = false
-        if(geoPoints.size < 2){
+        val trackPoints = MyApplication.app.daoSession?.trackPointDao?.loadAll()
+        if (trackPoints == null) {
+            return
+        }
+        var points = ArrayList<GeoPoint>()
+        for(point in trackPoints){
+            points.add(convertToModelClass(point))
+        }
+        if (points.size < 2) {
             return // 两个点才能算一条线，直接返回即可
         }
-        val trackPoints = MyApplication.app.daoSession?.trackPointDao?.loadAll()
-
         val endTrackingTime = System.currentTimeMillis()
-        val track = Track(geoPoints, beginTrackingTime, endTrackingTime)
+        val track = Track(points, beginTrackingTime, endTrackingTime)
         tracks.add(track)
         val title = dateFormat(Date()) + "-" + MyApplication.app.getString(trackType!!.getName())
         val trekTrack = TrekTrack(trackType!!.type, tracks, beginTrackingTime, endTrackingTime, title)
         ThreadExecutor.defaultInstance().doTask(
                 Runnable {
                     val localTrack = convertToDbClass(trekTrack)
+                    MyApplication.app.daoSession?.trackPointDao?.deleteAll()
                     MyApplication.app.daoSession?.trekTrackDao?.insert(localTrack)
                     EventBus.getDefault().post(TrekEvent(
                             TrekEvent.TYPE_RECORD_TRACK, "记录一条轨迹", localTrack))
@@ -93,8 +109,9 @@ class TrackManager {
         if (accuracy == null) {
             accuracy = Float.MAX_VALUE
         }
-        if (40.0f < accuracy) {
-            return // 误差超过50米的不记录
+        if(!BuildConfig.DEBUG) { // 如果是发布版本，则只使用GPS定位，并且精度要求50米以内
+            if(location?.locationType != 1) return
+            if (50.0f < accuracy)  return
         }
         val position = LatLng(location.latitude, location.longitude)
         MyApplication.app.cache?.track?.add(position)

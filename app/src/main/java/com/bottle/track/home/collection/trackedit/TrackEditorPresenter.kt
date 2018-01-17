@@ -43,6 +43,7 @@ class TrackEditorPresenter: TrackEditorContract.Presenter {
         if(BuildConfig.DEBUG){
             EventBus.getDefault().post(TrekEvent(
                     TrekEvent.TYPE_UPDATE_TRACK, "修改一条轨迹", trekTrack))
+            view.goback()
         } else {
             recordTrack(trekTrack!!) // release 版本才上传轨迹
         }
