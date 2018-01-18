@@ -60,7 +60,8 @@ class HomeFragment : LazyLoadFragment(), View.OnClickListener {
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.llSetting -> {
-                CollapsingToolbarLayoutActivity.start(activity)
+                WebViewActivity.start(activity, "https://cn.bing.com/?")
+                // CollapsingToolbarLayoutActivity.start(activity)
             }
             R.id.llUserInfo -> {
                 LoginActivity.start(context as BaseActivity, 100)

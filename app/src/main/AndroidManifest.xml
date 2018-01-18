@@ -67,7 +67,8 @@
             android:name=".home.search.preview.PoiPreviewActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".home.collection.poiedit.PoiEditorActivity" />
-        <activity android:name=".home.collection.poipreview.PoiPreviewActivity2"></activity>
+        <activity android:name=".home.collection.poipreview.PoiPreviewActivity2" />
+        <activity android:name="com.bottle.track.home.user.WebViewActivity" />
     </application>
 
 </manifest>

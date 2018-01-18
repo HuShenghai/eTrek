@@ -1,5 +1,6 @@
 package com.bottle.track.home.map.view
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -27,12 +28,13 @@ import com.bottle.track.core.model.TrackType
 import com.bottle.track.map.regeocode
 import com.bottle.track.app.service.Command
 import com.bottle.track.app.service.TrekService
+import com.bottle.track.base.view.createSimpleDialog
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class MapFragment : LazyLoadFragment(),  View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener {
+class MapFragment : LazyLoadFragment(), View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener {
 
     private var mParam1: String? = null
     private var mParam2: String? = null
@@ -113,7 +115,9 @@ class MapFragment : LazyLoadFragment(),  View.OnClickListener, GeocodeSearch.OnG
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.imgAddLocation -> { PoiSearchActivity.start(activity, 100)}
+            R.id.imgAddLocation -> {
+                PoiSearchActivity.start(activity, 100)
+            }
             R.id.imgMyLocation -> {
                 if (center != null)
                     amap?.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 19f))
@@ -124,13 +128,38 @@ class MapFragment : LazyLoadFragment(),  View.OnClickListener, GeocodeSearch.OnG
             R.id.imgTrack -> {
                 if (tracking) {
                     tracking = false
-                    TrekService.start(Command(Command.STOP_TRACKING, "停止记录轨迹", ""))
-                    showToast("停止记录轨迹")
+                    TrekService.start(Command(Command.STOP_TRACKING,
+                            activity.getString(R.string.tips_stop_tracking), ""))
+                    showToast(activity.getString(R.string.tips_stop_tracking))
                     overlay?.remove(amap!!)
                 } else {
-                    showToast("开始记录轨迹")
-                    TrekService.start(Command(Command.START_TRACKING, "开始记录轨迹", TrackType.PEDESTRIANISM))
-                    tracking = true
+                    val trackPoints = MyApplication.app.daoSession?.trackPointDao?.loadAll()
+                    if (trackPoints == null) {
+                        return
+                    }
+                    if (trackPoints.size > 0) {
+                        createSimpleDialog(activity, title = "",
+                                question = activity.getString(R.string.tips_continue_last_track),
+                                onOkClickListener = DialogInterface.OnClickListener { dialog, which ->
+                                    showToast(getString(R.string.tips_start_tracking))
+                                    TrekService.start(Command(Command.START_TRACKING,
+                                            getString(R.string.tips_start_tracking), TrackType.PEDESTRIANISM))
+                                    tracking = true
+                                },
+                                onCancelClickListener = DialogInterface.OnClickListener { dialog, which ->
+                                    MyApplication.app.daoSession?.trackPointDao?.deleteAll()
+                                    showToast(getString(R.string.tips_start_tracking))
+                                    TrekService.start(Command(Command.START_TRACKING,
+                                            getString(R.string.tips_start_tracking), TrackType.PEDESTRIANISM))
+                                    tracking = true
+                                },
+                                canceledOnTouchOutside = false).show()
+                    } else {
+                        showToast(getString(R.string.tips_start_tracking))
+                        TrekService.start(Command(Command.START_TRACKING,
+                                getString(R.string.tips_start_tracking), TrackType.PEDESTRIANISM))
+                        tracking = true
+                    }
                 }
             }
         }
@@ -177,8 +206,8 @@ class MapFragment : LazyLoadFragment(),  View.OnClickListener, GeocodeSearch.OnG
         }
     }
 
-    private fun getCityCode(event: TrekEvent<Any>){
-        if(!TextUtils.isEmpty(MyApplication.app.cache?.cityCode)){
+    private fun getCityCode(event: TrekEvent<Any>) {
+        if (!TextUtils.isEmpty(MyApplication.app.cache?.cityCode)) {
             return
         }
         if (event.event is AMapLocation) {

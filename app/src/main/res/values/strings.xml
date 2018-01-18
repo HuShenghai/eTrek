@@ -24,6 +24,9 @@
     <string name="format_coordinate">(%s,%s)</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
+    <string name="tips_continue_last_track">是否继续上一次轨迹记录？</string>
+    <string name="tips_start_tracking">开始记录轨迹</string>
+    <string name="tips_stop_tracking">停止轨迹记录</string>
     <string name="title_activity_collapsing_toolbar_layout">滑动测试</string>
     <string name="large_text">large text</string>
 </resources>
